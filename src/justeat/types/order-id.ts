@@ -1,26 +1,4 @@
-//To fetch data
-interface OrderIdAttributions {
-  since: number //unix timestamp
-  until: number //unix timestamp
-  pixel_id: string
-  app_id: string
-  fields?: string
-  limit?: number
-}
-
-// Results we get back
-interface Results {
-  data: Fields[]
-  paging: {
-    cursors: {
-      before: string
-      after: string
-    }
-    next: string
-  }
-}
-
-interface Fields {
+interface OrderId {
   order_id: string
   pixel_id: string
   app_id: string

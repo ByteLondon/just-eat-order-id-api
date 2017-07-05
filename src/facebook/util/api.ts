@@ -1,5 +1,3 @@
-// https://graph.facebook.com/v2.9/<BUSINESS_ID>/order_id_attributions
-
 import axios, { AxiosResponse } from 'axios'
 
 export const checkStatusCode = <T>(response: AxiosResponse): Promise<T> => {

@@ -1,22 +1,27 @@
 {
   "name": "order-id-api",
   "version": "1.0.0",
-	"description": "",
+  "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "tsc",
+    "start": "node lib/index.js",
     "test": "mocha -r ts-node/register --colors --recursive 'test/**/*.test.ts'"
   },
   "author": "Byte London Ltd.",
   "license": "UNLICENSED",
-	"private": true,
+  "private": true,
   "dependencies": {
     "@types/node": "^8.0.7",
     "axios": "^0.16.2",
     "dotenv": "^4.0.0",
+    "logfmt": "^1.2.0",
     "typescript": "^2.4.1"
   },
-  "devDependencies": {},
-	"engines": {
-		"node": "8.1.0"
-	}
+  "devDependencies": {
+    "ts-node": "^3.2.0"
+  },
+  "engines": {
+    "node": "8.1.0"
+  }
 }

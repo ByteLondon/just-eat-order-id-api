@@ -2,6 +2,7 @@ import api, { checkStatusCode } from './util/api'
 import { Insight } from './types/insights'
 import * as config from '../config'
 import * as qs from 'querystring'
+import { fetchPagedData } from './util/paged-data'
 
 //https://developers.facebook.com/docs/marketing-api/insights/fields/v2.9
 
@@ -19,21 +20,19 @@ export const fetchInsights = (
   adAccountId: string,
   since: string,
   until: string
-) =>
-  api
-    .post(
-      '',
-      qs.stringify({
-        access_token: accessToken,
-        batch: JSON.stringify([
-          {
-            method: 'GET',
-            relative_url: `v2.9/act_${adAccountId}/insights?${parameters(
-              since,
-              until
-            )}`
-          }
-        ])
-      })
-    )
-    .then(checkStatusCode)
+) => {
+  const q = {
+    access_token: accessToken,
+    batch: JSON.stringify([
+      {
+        method: 'GET',
+        relative_url: `v2.9/act_${adAccountId}/insights?${parameters(
+          since,
+          until
+        )}`
+      }
+    ])
+  }
+  await
+  // api.post('', qs.stringify(q)).then(checkStatusCode)
+}

@@ -4,8 +4,7 @@ export const checkStatusCode = <T>(response: AxiosResponse): Promise<T> => {
   if (Math.floor(response.status / 100) !== 2) {
     throw new Error(response.statusText)
   }
-  console.log(response.data)
-  return response.data
+  return response.data[0].body
 }
 
 export default axios.create({

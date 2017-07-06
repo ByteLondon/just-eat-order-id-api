@@ -11,5 +11,3 @@ export default axios.create({
   baseURL: 'https://graph.facebook.com/v2.9',
   timeout: 60000
 })
-
-//TODO: push data to db at each page

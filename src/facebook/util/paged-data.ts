@@ -24,9 +24,9 @@ interface QueryString {
   ]
 }
 
-export const fetchPagedData = (url: string, q: QueryString) => {
+export const fetchPagedData = (url: string, qs?) => {
   return new Promise((resolve, reject) =>
-    processPages(url, q, [], (err, res) => {
+    processPages(url, qs, [], (err, res) => {
       if (err) {
         reject(err)
       } else {
@@ -36,12 +36,11 @@ export const fetchPagedData = (url: string, q: QueryString) => {
   )
 }
 
-//TODO: add type for q
-const processPages = (url: string, q: QueryString, data, cb) =>
-  api.post('', q).then(checkStatusCode).then((body: Body) => {
+const processPages = (url: string, qs, data, cb) =>
+  api.get(url, qs).then(checkStatusCode).then((body: Body) => {
     data = data.concat(body.data)
     if (body.paging && body.paging.next) {
-      processPages(body.paging.next, q, data, cb)
+      processPages(body.paging.next, qs, data, cb)
     } else {
       cb(null, data)
     }

@@ -17,7 +17,6 @@ export const fetchCreatives = async (
     }
   }
 
-  const results = await fetchPagedData(`/Post/${postId}`, qs)
-  console.log(results)
+  const results = await fetchPagedData(`/${postId}/posts`, qs)
   return results as Post[]
 }

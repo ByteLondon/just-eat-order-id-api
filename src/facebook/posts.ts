@@ -16,7 +16,7 @@ export interface Post {
 export const fetchPosts = async (
   accessToken: string,
   postId: string,
-  since: number
+  since: string
 ): Promise<Post[]> => {
   const qs = {
     params: {
@@ -26,7 +26,7 @@ export const fetchPosts = async (
     }
   }
 
-  const results = await fetchPagedData(`/${postId}/posts`, qs)
+  const results = await fetchPagedData(`/${postId}/posts`, qs, since)
   // console.log(results)
   return results as Post[]
 }

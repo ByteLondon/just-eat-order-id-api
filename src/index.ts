@@ -23,31 +23,23 @@ const insights = async () =>
   )
 
 const posts = async () =>
-  await fetchPosts(
-    config.facebookAccessToken,
-    config.pageId.jeUk,
-    Math.floor(Date.parse(since) / 1000)
-  )
+  await fetchPosts(config.facebookAccessToken, config.pageId.jeUk, since)
 
 const creatives = async () =>
-  await fetchCreatives(
-    config.facebookAccessToken,
-    config.adAcountId.jeEngagement,
-    Math.floor(Date.parse(since) / 1000)
-  )
+  await fetchCreatives(config.facebookAccessToken, '23842635105000745', since)
 
 const creativeId = async () =>
   await fetchCreativeId(
     config.facebookAccessToken,
     config.adAcountId.jeEngagement,
-    Math.floor(Date.parse(since) / 1000)
+    since
   )
 
 const c = async () => {
   const data = await fetchCreativeId(
     config.facebookAccessToken,
     config.adAcountId.jeEngagement,
-    Math.floor(Date.parse(since) / 1000)
+    since
   )
   async.map(
     data,
@@ -55,7 +47,7 @@ const c = async () => {
       const res = await fetchCreatives(
         config.facebookAccessToken,
         ad.adcreatives.data[0].id,
-        Math.floor(Date.parse(since) / 1000)
+        since
       )
       next()
     },
@@ -63,8 +55,8 @@ const c = async () => {
   )
 }
 
-// creativeId()
+creativeId()
 // insights()
 // posts()
 // creatives()
-c()
+// c()

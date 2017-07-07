@@ -14,7 +14,7 @@ export interface AdCreative {
 export const fetchCreativeId = async (
   accessToken: string,
   adAccountId: string,
-  since: number
+  since: string
 ): Promise<AdCreative[]> => {
   const qs = {
     params: {
@@ -24,17 +24,17 @@ export const fetchCreativeId = async (
     }
   }
 
-  const results = await fetchPagedData(`/act_${adAccountId}/ads`, qs)
+  const results = await fetchPagedData(`/act_${adAccountId}/ads`, qs, since)
   console.log(results)
-  console.log(results[0].insights)
-  console.log(results[0].adcreatives.data)
+  // console.log(results[0].insights)
+  // console.log(results[0].adcreatives.data)
   return results as AdCreative[]
 }
 
 export const fetchCreatives = async (
   accessToken: string,
   creativeId: string,
-  since: number
+  since: string
 ): Promise<AdCreative[]> => {
   const qs = {
     params: {
@@ -44,7 +44,7 @@ export const fetchCreatives = async (
     }
   }
 
-  const results = await fetchPagedData(`/${creativeId}`, qs)
+  const results = await fetchPagedData(`/${creativeId}`, qs, since)
   console.log(results)
   return results as AdCreative[]
 }

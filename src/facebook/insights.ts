@@ -30,6 +30,7 @@ export const fetchInsights = async (
       time_range: { since, until }
     }
   }
-  const results = await fetchPagedData(`act_${adAccountId}/insights`, qs)
+  const results = await fetchPagedData(`act_${adAccountId}/insights`, qs, since)
+  console.log(results)
   return results as Insight[]
 }

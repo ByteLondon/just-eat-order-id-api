@@ -8,6 +8,6 @@ export const checkStatusCode = <T>(response: AxiosResponse): Promise<T> => {
 }
 
 export default axios.create({
-  baseURL: 'https://graph.facebook.com/v2.9/',
+  baseURL: 'https://graph.facebook.com/v2.9',
   timeout: 60000
 })

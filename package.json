@@ -4,20 +4,29 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
+    "prestart": "tsc",
+    "start": "node lib/index.js",
     "test": "mocha -r ts-node/register --colors --recursive 'test/**/*.test.ts'"
   },
   "author": "Byte London Ltd.",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@types/lodash": "^4.14.68",
+    "db-migrate": "^0.10.0-beta.20",
     "@types/node": "^8.0.8",
     "axios": "^0.16.2",
     "csv": "^1.1.1",
     "dotenv": "^4.0.0",
+    "lodash": "^4.17.4",
+    "logfmt": "^1.2.0",
+    "pg": "^6.4.0",
     "typescript": "^2.4.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "ts-node": "^3.2.0"
+  },
   "engines": {
-    "node": "^8.1.0"
+    "node": "8.1.0"
   }
 }

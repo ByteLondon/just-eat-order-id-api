@@ -6,4 +6,6 @@ export interface Insight {
   campaign_id: string
   campaign_name: string
   objective: string
+  date_start: string
+  date_stop: string
 }

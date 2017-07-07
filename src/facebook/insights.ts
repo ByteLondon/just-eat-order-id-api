@@ -11,7 +11,7 @@ export const fetchInsights = async (
   adAccountId: string,
   since: string,
   until: string
-) => {
+): Promise<Insight[]> => {
   const qs = {
     params: {
       access_token: accessToken,
@@ -22,5 +22,5 @@ export const fetchInsights = async (
     }
   }
   const results = await fetchPagedData(`act_${adAccountId}/insights`, qs)
-  return results
+  return results as Insight[]
 }

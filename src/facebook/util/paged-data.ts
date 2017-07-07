@@ -12,7 +12,7 @@ interface Body {
   }
 }
 
-interface QueryString {
+interface InsightsQs {
   params: {
     access_token: string
     level: string
@@ -21,10 +21,18 @@ interface QueryString {
   }
 }
 
+interface PostsQs {
+  params: {
+    access_token: string
+    fields: string
+    since: any
+  }
+}
+
 // type EmptyArr = []
 // type Data = Insight[]
 
-export const fetchPagedData = (url: string, qs?: QueryString) => {
+export const fetchPagedData = (url: string, qs?: InsightsQs | PostsQs) => {
   return new Promise((resolve, reject) =>
     processPages(url, qs, [], (err, res) => {
       if (err) {
@@ -36,7 +44,7 @@ export const fetchPagedData = (url: string, qs?: QueryString) => {
   )
 }
 
-const processPages = (url: string, qs: QueryString, data, cb) =>
+const processPages = (url: string, qs: InsightsQs | PostsQs, data, cb) =>
   api.get(url, qs).then(checkStatusCode).then((body: Body) => {
     data = data.concat(body.data)
     if (body.paging && body.paging.next) {

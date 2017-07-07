@@ -1,6 +1,7 @@
 import { logger } from './logger'
 import * as config from './config'
 import { fetchInsights } from './facebook/insights'
+import { fetchCreatives } from './facebook/posts'
 
 process.on('unhandledRejection', (err, promise) => {
   console.log('unhandled rejection', err, { promise })
@@ -8,12 +9,23 @@ process.on('unhandledRejection', (err, promise) => {
   // logger.error('unhandled rejection', err, { promise })
 })
 
-const results = async () =>
+const since = '2017-06-29'
+const until = '2017-07-03'
+
+const insights = async () =>
   await fetchInsights(
     config.facebookAccessToken,
     '1411952492149453',
-    '2017-06-29',
-    '2017-07-03'
+    since,
+    until
   )
 
-results()
+const posts = async () =>
+  await fetchCreatives(
+    config.facebookAccessToken,
+    '340627227551',
+    Math.floor(Date.parse(since) / 1000)
+  )
+
+// insights()
+posts()

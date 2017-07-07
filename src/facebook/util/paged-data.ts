@@ -25,7 +25,7 @@ interface PostsQs {
   params: {
     access_token: string
     fields: string
-    since: any
+    since: number
   }
 }
 

@@ -4,6 +4,7 @@ import * as config from '../config'
 import { fetchPagedData } from './util/paged-data'
 //https://developers.facebook.com/docs/graph-api/reference/v2.9/post
 
+//TODO: take the url out of the message and add it as a new field
 export const fetchCreatives = async (
   accessToken: string,
   postId: string,
@@ -17,7 +18,6 @@ export const fetchCreatives = async (
     }
   }
 
-  const results = await fetchPagedData(`/Post/${postId}`, qs)
-  console.log(results)
+  const results = await fetchPagedData(`/${postId}/posts`, qs)
   return results as Post[]
 }

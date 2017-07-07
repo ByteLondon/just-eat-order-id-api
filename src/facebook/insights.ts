@@ -1,10 +1,19 @@
 import api, { checkStatusCode } from './util/api'
-import { Insight } from './types/insights'
 import * as config from '../config'
-import * as qs from 'querystring'
 import { fetchPagedData } from './util/paged-data'
 
 //https://developers.facebook.com/docs/marketing-api/insights/fields/v2.9
+export interface Insight {
+  ad_name: string
+  ad_id: string
+  adset_name: string
+  adset_id: string
+  campaign_id: string
+  campaign_name: string
+  objective: string
+  date_start: string
+  date_stop: string
+}
 
 export const fetchInsights = async (
   accessToken: string,

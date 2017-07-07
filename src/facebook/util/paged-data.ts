@@ -1,9 +1,11 @@
 import api, { checkStatusCode } from './api'
-import { Insight } from '../types/insights'
+import { Insight } from '../insights'
+import { Post } from '../posts'
 
 interface Body {
-  data: Insight[]
-  paging: {
+  error?: any
+  data?: Insight[] | Post[]
+  paging?: {
     cursors: {
       before: string
       after: string
@@ -46,10 +48,21 @@ export const fetchPagedData = (url: string, qs?: InsightsQs | PostsQs) => {
 
 const processPages = (url: string, qs: InsightsQs | PostsQs, data, cb) =>
   api.get(url, qs).then(checkStatusCode).then((body: Body) => {
-    data = data.concat(body.data)
-    if (body.paging && body.paging.next) {
-      processPages(body.paging.next, qs, data, cb)
+    if (body.error) {
+      if (body.error.code === 17 && body.error.is_transient) {
+        console.log('rate limit at', new Date())
+        setTimeout(() => processPages(url, qs, data, cb), 500000)
+      } else {
+        cb(new Error(body.error))
+      }
+    } else if (body.data) {
+      data = data.concat(body.data)
+      if (body.paging && body.paging.next) {
+        setImmediate(() => processPages(body.paging.next, qs, data, cb))
+      } else {
+        cb(null, data)
+      }
     } else {
-      cb(null, data)
+      cb(new Error('no data was recieved from API'))
     }
   })

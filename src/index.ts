@@ -26,7 +26,7 @@ const posts = async () =>
   await fetchPosts(config.facebookAccessToken, config.pageId.jeUk, since)
 
 const creatives = async () =>
-  await fetchCreatives(config.facebookAccessToken, '23842635105000745', since)
+  await fetchCreatives(config.facebookAccessToken, '23842634448530745', since)
 
 const creativeId = async () =>
   await fetchCreativeId(
@@ -46,6 +46,7 @@ const c = async () => {
     async (ad, next) => {
       const res = await fetchCreatives(
         config.facebookAccessToken,
+        // ad.creative.id,
         ad.adcreatives.data[0].id,
         since
       )
@@ -55,8 +56,8 @@ const c = async () => {
   )
 }
 
-creativeId()
 // insights()
 // posts()
+// creativeId()
 // creatives()
-// c()
+c()

@@ -25,4 +25,8 @@ class Scrubber extends Transform {
 
 // use this by piping the data through it
 
-process.stdin.pipe(parse({ relax_column_count: true })).pipe(new Scrubber()).pipe(stringify()).pipe(process.stdout)
+process.stdin
+  .pipe(parse({ relax: true, relax_column_count: true }))
+  .pipe(new Scrubber())
+  .pipe(stringify())
+  .pipe(process.stdout)

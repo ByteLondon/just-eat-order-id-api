@@ -31,6 +31,6 @@ export const fetchInsights = async (
     }
   }
   const results = await fetchPagedData(`act_${adAccountId}/insights`, qs, since)
-  console.log(results)
+  // console.log(results)
   return results as Insight[]
 }

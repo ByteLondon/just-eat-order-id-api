@@ -31,17 +31,20 @@ interface PostsQs {
   }
 }
 
-// There seems to be a bug with since on some endpoints so the API returns all data regardless of since date
-// https://developers.facebook.com/bugs/1706964106271869/ so have to check using created_time for the creative endpoints
-const determinePagination = (body, since) => {
+/* There seems to be a bug with since on some endpoints so the API returns all data regardless of since date
+* https://developers.facebook.com/bugs/1706964106271869/ so have to check using created_time for the creative endpoints
+-- exported for tests */
+export const determinePagination = (body, since) => {
   const data = body.data
   if (body.paging && body.paging.next) {
     if (data[0].hasOwnProperty('created_time')) {
       const lastItem = data.length - 1
-      Date.parse(data[lastItem].created_time) > Date.parse(since)
+      return Date.parse(data[lastItem].created_time) > Date.parse(since)
+    } else {
+      return true
     }
   } else {
-    return true
+    return false
   }
 }
 
@@ -77,6 +80,7 @@ const processPages = (
         cb(new Error(body.error))
       }
     } else if (body.data) {
+      console.log(body)
       data = data.concat(body.data)
       if (determinePagination(body, since)) {
         setImmediate(() => processPages(body.paging.next, qs, since, data, cb))

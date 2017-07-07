@@ -25,8 +25,9 @@ export const fetchCreativeId = async (
   }
 
   const results = await fetchPagedData(`/act_${adAccountId}/ads`, qs)
-  // console.log(results[0].insights)
-  // console.log(results[0].adcreatives.data)
+  console.log(results)
+  console.log(results[0].insights)
+  console.log(results[0].adcreatives.data)
   return results as AdCreative[]
 }
 

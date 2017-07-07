@@ -51,7 +51,7 @@ const processPages = (url: string, qs: InsightsQs | PostsQs, data, cb) =>
     if (body.error) {
       if (body.error.code === 17 && body.error.is_transient) {
         console.log('rate limit at', new Date())
-        setTimeout(() => processPages(url, qs, data, cb), 500000)
+        setTimeout(() => processPages(url, qs, data, cb), 600000)
       } else {
         cb(new Error(body.error))
       }

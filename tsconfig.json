@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "alwaysStrict": false,
+    "alwaysStrict": true,
     "lib": [ "es6" ],
     "module": "commonjs",
     "moduleResolution": "node",

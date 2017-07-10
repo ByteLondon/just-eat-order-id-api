@@ -4,18 +4,58 @@ import { fetchPagedData } from './util/paged-data'
 
 // https://developers.facebook.com/docs/marketing-api/reference/adgroup
 
+// export interface AdCreative {
+//   ad_id: string
+//   adcreative_id: string
+//   post_id: string
+//   instagram_url: string
+// }
+
+export interface AdCreativeId {
+  adcreatives: {
+    data: [
+      {
+        id: string
+      }
+    ]
+  }
+  created_time: string
+  insights: {
+    data: [
+      {
+        date_start: string
+        date_stop: string
+        impressions: string
+        spend: string
+        account_id: string
+        campaign_id: string
+        adset_id: string
+        ad_id: string
+      }
+    ]
+    paging: {
+      cursors: {
+        before: string
+        after: string
+      }
+    }
+  }
+  creative: {
+    id: string
+  }
+  id: string
+}
+
 export interface AdCreative {
-  ad_id: string
-  adcreative_id: string
-  post_id: string
-  instagram_url: string
+  effective_object_story_id: string
+  id: string
 }
 
 export const fetchCreativeId = async (
   accessToken: string,
   adAccountId: string,
   since: string
-): Promise<AdCreative[]> => {
+): Promise<AdCreativeId[]> => {
   const qs = {
     params: {
       access_token: accessToken,
@@ -25,28 +65,23 @@ export const fetchCreativeId = async (
   }
 
   const results = await fetchPagedData(`/act_${adAccountId}/ads`, qs, since)
-  // console.log(results)
-  // console.log(results[0].insights)
-  // console.log(results[0].adcreatives.data)
-  return results as AdCreative[]
+  return results as AdCreativeId[]
 }
 
+// This function doesn't call fetchPagedData as it doesn't need to paginate
 export const fetchCreatives = async (
   accessToken: string,
   creativeId: string,
   since: string
-): Promise<AdCreative[]> => {
+) => {
   const qs = {
     params: {
       access_token: accessToken,
-      fields: 'effective_object_story_id,instagram_permalink_url',
+      fields: 'effective_object_story_id',
       since
     }
   }
-
-  const results = await fetchPagedData(`/${creativeId}`, qs, since)
-  console.log(results)
-  return results as AdCreative[]
+  api.get(`/${creativeId}`, qs).then(checkStatusCode).then(res => res)
 }
 
 // https://developers.facebook.com/docs/marketing-api/reference/ad-creative

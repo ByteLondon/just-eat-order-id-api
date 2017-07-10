@@ -11,7 +11,7 @@ process.on('unhandledRejection', (err, promise) => {
   // logger.error('unhandled rejection', err, { promise })
 })
 
-const since = '2017-07-06'
+const since = '2017-06-25'
 const until = '2017-07-07'
 
 const insights = async () =>
@@ -26,7 +26,7 @@ const posts = async () =>
   await fetchPosts(config.facebookAccessToken, config.pageId.jeUk, since)
 
 const creatives = async () =>
-  await fetchCreatives(config.facebookAccessToken, '23842634448530745', since)
+  await fetchCreatives(config.facebookAccessToken, '23842635499520745', since)
 
 const creativeId = async () =>
   await fetchCreativeId(
@@ -46,18 +46,18 @@ const c = async () => {
     async (ad, next) => {
       const res = await fetchCreatives(
         config.facebookAccessToken,
-        // ad.creative.id,
         ad.adcreatives.data[0].id,
         since
       )
-      next()
+      // console.log(res)
+      next(null, res)
     },
-    (err, res) => console.log(res)
+    (err, res) => console.log('RES: ', res)
   )
 }
 
 // insights()
 // posts()
-creativeId()
-// creatives()
+// creativeId()
+creatives()
 // c()

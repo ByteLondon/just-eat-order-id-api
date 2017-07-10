@@ -80,7 +80,6 @@ const processPages = (
         cb(new Error(body.error))
       }
     } else if (body.data) {
-      console.log(body)
       data = data.concat(body.data)
       if (determinePagination(body, since)) {
         setImmediate(() => processPages(body.paging.next, qs, since, data, cb))

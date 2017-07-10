@@ -1,15 +1,9 @@
 import { query, unpackFirstRow } from './core'
 import { pickBy, isBoolean } from 'lodash'
+import { Post } from '../facebook/posts'
 
-const UPSERT_POSTS = `
-  insert into table facebook_posts
-    (post_id, 
-    message,
-    permalink_url,
-    type,
-    created_time,
-    link,
-    page_id)
+const UPSERT = `
+  insert into facebook_posts (post_id, permalink_url, message, created_time, type, link, page_id)
   values
     ($1, $2, $3, $4, $5, $6, $7)
   on conflict (post_id) do update set
@@ -17,39 +11,21 @@ const UPSERT_POSTS = `
     message = coalesce(nullif(EXCLUDED.message, ''), facebook_posts.message),
     permalink_url = coalesce(nullif(EXCLUDED.permalink_url, ''), facebook_posts.permalink_url),
     type = coalesce(nullif(EXCLUDED.type, ''), facebook_posts.type),
-    created_time = coalesce(nullif(EXCLUDED.created_time, ''), facebook_posts.created_time),
+    created_time = EXCLUDED.created_time,
     link = coalesce(nullif(EXCLUDED.link, ''), facebook_posts.link),
     page_id = coalesce(nullif(EXCLUDED.page_id, ''), facebook_posts.page_id)
   returning *`
 
-interface FacebookPosts {
-  postId: string
-  message?: string
-  permalinkUrl?: string
-  type?: string
-  createdTime?: string
-  link?: string
-  pageId?: string
-}
-
-export const insertAds = (values): Promise<FacebookPosts> => {
+export const insert = (values): Promise<Post> => {
   const {
-    postId
+    id,
+    permalink_url,
     message,
-    permalinkUrl,
+    created_time,
     type,
-    createdTime,
     link,
-    pageId
+    page_id
   } = pickBy(values, v => v || isBoolean(v)) as any
-  const params = [
-    postId
-    message,
-    permalinkUrl,
-    type,
-    createdTime,
-    link,
-    pageId
-  ]
-  return query(UPSERT_POSTS, params).then(unpackFirstRow) as Promise<FacebookPosts>
+  const params = [id, permalink_url, message, created_time, type, link, page_id]
+  return query(UPSERT, params).then(unpackFirstRow) as Promise<Post>
 }

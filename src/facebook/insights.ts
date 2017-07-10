@@ -4,15 +4,16 @@ import { fetchPagedData } from './util/paged-data'
 
 //https://developers.facebook.com/docs/marketing-api/insights/fields/v2.9
 export interface Insight {
-  ad_name: string
   ad_id: string
+  ad_name: string
   adset_name: string
   adset_id: string
-  campaign_id: string
   campaign_name: string
+  campaign_id: string
   objective: string
   date_start: string
   date_stop: string
+  adAccount?: string
 }
 
 export const fetchInsights = async (
@@ -30,7 +31,13 @@ export const fetchInsights = async (
       time_range: { since, until }
     }
   }
-  const results = await fetchPagedData(`act_${adAccountId}/insights`, qs, since)
+  const results = await fetchPagedData(
+    `act_${adAccountId}/insights`,
+    qs,
+    since,
+    'insights',
+    adAccountId
+  )
   console.log(results)
   return results as Insight[]
 }

@@ -1,18 +1,10 @@
 import { query, unpackFirstRow } from './core'
 import { pickBy, isBoolean } from 'lodash'
+import { Insight } from '../facebook/insights'
 
-const UPSERT_ADS = `
-  insert into table facebook_ads
-    (ad_id,
-    ad_name,
-    adset_name,
-    adset_id,
-    campaign_name,
-    campaign_id,
-    objective,
-    date_start,
-    date_stop,
-    ad_account)
+const UPSERT = `
+  insert into facebook_ads
+    (ad_id, ad_name, adset_name, adset_id, campaign_name, campaign_id, objective, date_start, date_stop, ad_account)
   values
     ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   on conflict (ad_id) do update set
@@ -28,40 +20,30 @@ const UPSERT_ADS = `
     ad_account = coalesce(nullif(EXCLUDED.ad_account, ''), facebook_ads.ad_account)
   returning *`
 
-export interface FacebookAds {
-  adId: string
-  adName?: string
-  adsetName?: string
-  campaignId?: string
-  campaignName?: string
-  objective?: string
-  dateStart?: string
-  dateStop?: string
-  adAccount: string
-}
-
-export const insertAds = (values): Promise<FacebookAds> => {
+export const insert = (values): Promise<Insight> => {
   const {
-    adId,
-    adName,
-    adsetName,
-    campaignId,
-    campaignName,
+    ad_id,
+    ad_name,
+    adset_name,
+    adset_id,
+    campaign_name,
+    campaign_id,
     objective,
-    dateStart,
-    dateStop,
+    date_start,
+    date_stop,
     adAccount
   } = pickBy(values, v => v || isBoolean(v)) as any
   const params = [
-    adId,
-    adName,
-    adsetName,
-    campaignId,
-    campaignName,
+    ad_id,
+    ad_name,
+    adset_name,
+    adset_id,
+    campaign_name,
+    campaign_id,
     objective,
-    dateStart,
-    dateStop,
+    date_start,
+    date_stop,
     adAccount
   ]
-  return query(UPSERT_ADS, params).then(unpackFirstRow) as Promise<FacebookAds>
+  return query(UPSERT, params).then(unpackFirstRow) as Promise<Insight>
 }

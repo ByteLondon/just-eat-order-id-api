@@ -1,6 +1,8 @@
 import api, { checkStatusCode } from './api'
 import { Insight } from '../insights'
 import { Post } from '../posts'
+import * as Ads from '../../model/facebook-ads'
+import * as Posts from '../../model/facebook-posts'
 
 interface Body {
   error?: any
@@ -48,43 +50,79 @@ export const determinePagination = (body, since) => {
   }
 }
 
-export const fetchPagedData = (
-  url: string,
-  qs: InsightsQs | PostsQs,
-  since: string
-) => {
-  return new Promise((resolve, reject) =>
-    processPages(url, qs, since, [], (err, res) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res)
-      }
-    })
-  )
-}
+type Table = 'insights' | 'posts'
 
-const processPages = (
+export const fetchPagedData = async (
   url: string,
   qs: InsightsQs | PostsQs,
   since: string,
-  data,
+  table: Table,
+  objectId: string
+) => {
+  return new Promise(
+    async (resolve, reject) =>
+      await processPages(url, qs, since, table, objectId, (err, res) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(res)
+        }
+      })
+  )
+}
+
+//TODO: add creative type to data
+//TODO: test
+const insertData = async (
+  table: Table,
+  objectId: string,
+  data: (Insight | Post)[]
+) => {
+  data.forEach(async a => {
+    if (objectId) {
+      if (table == 'insights') {
+        const values = Object.assign({ ad_account: objectId }, a)
+        const ads = await Ads.insert(values)
+        return ads
+      } else if (table == 'posts') {
+        const values = Object.assign({ page_id: objectId }, a)
+        const posts = await Posts.insert(values)
+        return posts
+      }
+    }
+  })
+}
+
+const processPages = async (
+  url: string,
+  qs: InsightsQs | PostsQs,
+  since: string,
+  table: Table,
+  objectId: string,
   cb
 ) =>
-  api.get(url, qs).then(checkStatusCode).then((body: Body) => {
+  api.get(url, qs).then(checkStatusCode).then(async (body: Body) => {
     if (body.error) {
       if (body.error.code === 17 && body.error.is_transient) {
         console.log('rate limit at', new Date())
-        setTimeout(() => processPages(url, qs, since, data, cb), 600000)
+        setTimeout(
+          () => processPages(url, qs, since, table, objectId, cb),
+          600000
+        )
       } else {
         cb(new Error(body.error))
       }
     } else if (body.data) {
-      data = data.concat(body.data)
+      if (table) {
+        //only write to db if table is insights or posts (not creative)
+        await insertData(table, objectId, body.data)
+      }
       if (determinePagination(body, since)) {
-        setImmediate(() => processPages(body.paging.next, qs, since, data, cb))
+        setImmediate(() =>
+          processPages(body.paging.next, qs, since, table, objectId, cb)
+        )
       } else {
-        cb(null, data)
+        cb(null, body.data)
       }
     } else {
       cb(new Error('no data was recieved from API'))

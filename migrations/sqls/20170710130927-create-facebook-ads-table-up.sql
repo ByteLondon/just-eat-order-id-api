@@ -3,6 +3,7 @@ create table facebook_ads
   ad_id text primary key,
   ad_name text,
   adset_name text,
+  adset_id text,
   campaign_id text,
   campaign_name text,
   objective text,
@@ -13,3 +14,4 @@ create table facebook_ads
   entry_date timestamp default now() not null,
   entry_update_date timestamp default now() not null
 );
+

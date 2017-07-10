@@ -5,7 +5,6 @@ import { fetchPagedData } from './util/paged-data'
 
 export interface Post {
   id: string
-  name: string
   message: string
   permalink_url: string
   type: string // enum{link, status, photo, video, offer}
@@ -27,5 +26,6 @@ export const fetchPosts = async (
   }
 
   const results = await fetchPagedData(`/${postId}/posts`, qs, since)
+  console.log(results)
   return results as Post[]
 }

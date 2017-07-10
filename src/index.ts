@@ -49,5 +49,5 @@ const AdAndPostIds = async () => {
 }
 
 // insights()
-// posts()
-AdAndPostIds()
+posts()
+// AdAndPostIds()

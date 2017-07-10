@@ -47,8 +47,8 @@ export interface AdCreativeId {
 }
 
 export interface AdCreative {
-  effective_object_story_id: string
   id: string
+  effective_object_story_id: string
 }
 
 export const fetchCreativeId = async (
@@ -73,7 +73,7 @@ export const fetchCreatives = async (
   accessToken: string,
   creativeId: string,
   since: string
-) => {
+): Promise<AdCreative> => {
   const qs = {
     params: {
       access_token: accessToken,
@@ -81,7 +81,10 @@ export const fetchCreatives = async (
       since
     }
   }
-  api.get(`/${creativeId}`, qs).then(checkStatusCode).then(res => res)
+  return api
+    .get(`/${creativeId}`, qs)
+    .then(checkStatusCode)
+    .then(res => res) as Promise<AdCreative>
 }
 
 // https://developers.facebook.com/docs/marketing-api/reference/ad-creative

@@ -27,6 +27,5 @@ export const fetchPosts = async (
   }
 
   const results = await fetchPagedData(`/${postId}/posts`, qs, since)
-  // console.log(results)
   return results as Post[]
 }

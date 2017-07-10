@@ -24,3 +24,11 @@ export const adAcountId = {
   jeCreditCardBackup: '1195129097165128',
   jeEngagement: '1411952492149453'
 }
+
+// JE
+// act_1411952492149453/ads?fields=adcreatives,created_time,insights,creative
+// 23842635499520745?fields=effective_object_story_id
+
+// spotify
+// act_865853353476256/ads?fields=adcreatives,created_time,insights,creative
+// 6083245894659?fields=effective_object_story_id

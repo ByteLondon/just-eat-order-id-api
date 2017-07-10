@@ -1,9 +1,11 @@
 import api, { checkStatusCode } from './api'
-import { Insight } from '../types/insights'
+import { Insight } from '../insights'
+import { Post } from '../posts'
 
 interface Body {
-  data: Insight[]
-  paging: {
+  error?: any
+  data?: Insight[] | Post[]
+  paging?: {
     cursors: {
       before: string
       after: string
@@ -25,16 +27,34 @@ interface PostsQs {
   params: {
     access_token: string
     fields: string
-    since: number
+    since?: string | number
   }
 }
 
-// type EmptyArr = []
-// type Data = Insight[]
+/* There seems to be a bug with since on some endpoints so the API returns all data regardless of since date
+* https://developers.facebook.com/bugs/1706964106271869/ so have to check using created_time for the creative endpoints
+-- exported for tests */
+export const determinePagination = (body, since) => {
+  const data = body.data
+  if (body.paging && body.paging.next) {
+    if (data[0].hasOwnProperty('created_time')) {
+      const lastItem = data.length - 1
+      return Date.parse(data[lastItem].created_time) > Date.parse(since)
+    } else {
+      return true
+    }
+  } else {
+    return false
+  }
+}
 
-export const fetchPagedData = (url: string, qs?: InsightsQs | PostsQs) => {
+export const fetchPagedData = (
+  url: string,
+  qs: InsightsQs | PostsQs,
+  since: string
+) => {
   return new Promise((resolve, reject) =>
-    processPages(url, qs, [], (err, res) => {
+    processPages(url, qs, since, [], (err, res) => {
       if (err) {
         reject(err)
       } else {
@@ -44,12 +64,29 @@ export const fetchPagedData = (url: string, qs?: InsightsQs | PostsQs) => {
   )
 }
 
-const processPages = (url: string, qs: InsightsQs | PostsQs, data, cb) =>
+const processPages = (
+  url: string,
+  qs: InsightsQs | PostsQs,
+  since: string,
+  data,
+  cb
+) =>
   api.get(url, qs).then(checkStatusCode).then((body: Body) => {
-    data = data.concat(body.data)
-    if (body.paging && body.paging.next) {
-      processPages(body.paging.next, qs, data, cb)
+    if (body.error) {
+      if (body.error.code === 17 && body.error.is_transient) {
+        console.log('rate limit at', new Date())
+        setTimeout(() => processPages(url, qs, since, data, cb), 600000)
+      } else {
+        cb(new Error(body.error))
+      }
+    } else if (body.data) {
+      data = data.concat(body.data)
+      if (determinePagination(body, since)) {
+        setImmediate(() => processPages(body.paging.next, qs, since, data, cb))
+      } else {
+        cb(null, data)
+      }
     } else {
-      cb(null, data)
+      cb(new Error('no data was recieved from API'))
     }
   })

@@ -1,7 +1,9 @@
 import { logger } from './logger'
 import * as config from './config'
 import { fetchInsights } from './facebook/insights'
-import { fetchCreatives } from './facebook/posts'
+import { fetchPosts } from './facebook/posts'
+import { fetchCreatives, fetchCreativeId } from './facebook/adcreatives'
+import * as async from 'async'
 
 process.on('unhandledRejection', (err, promise) => {
   console.log('unhandled rejection', err, { promise })
@@ -9,8 +11,8 @@ process.on('unhandledRejection', (err, promise) => {
   // logger.error('unhandled rejection', err, { promise })
 })
 
-const since = '2017-06-29'
-const until = '2017-07-03'
+const since = '2017-06-25'
+const until = '2017-07-07'
 
 const insights = async () =>
   await fetchInsights(
@@ -21,11 +23,31 @@ const insights = async () =>
   )
 
 const posts = async () =>
-  await fetchCreatives(
+  await fetchPosts(config.facebookAccessToken, config.pageId.jeUk, since)
+
+const AdAndPostIds = async () => {
+  const data = await fetchCreativeId(
     config.facebookAccessToken,
-    config.pageId.jeUk,
-    Math.floor(Date.parse(since) / 1000)
+    config.adAcountId.jeEngagement,
+    since
   )
+  async.map(
+    data,
+    async (ad, next) => {
+      const creative = await fetchCreatives(
+        config.facebookAccessToken,
+        ad.adcreatives.data[0].id,
+        since
+      )
+      next(null, {
+        ad_id: ad.id,
+        post_id: creative.effective_object_story_id
+      })
+    },
+    (err, results) => results
+  )
+}
 
 // insights()
-posts()
+// posts()
+AdAndPostIds()

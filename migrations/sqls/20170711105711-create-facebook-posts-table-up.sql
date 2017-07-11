@@ -11,7 +11,7 @@ create table facebook_posts
   entry_update_date timestamp default now() not null
 );
 
+
 create trigger facebook_posts_entry_update_date
 before update on facebook_posts 
 for each row execute procedure entry_update_date();
-

@@ -15,8 +15,8 @@ const UPSERT = `
     campaign_name = coalesce(nullif(EXCLUDED.campaign_name, ''), facebook_insights.campaign_name),
     campaign_id = coalesce(nullif(EXCLUDED.campaign_id, ''), facebook_insights.campaign_id),
     objective = coalesce(nullif(EXCLUDED.objective, ''), facebook_insights.objective),
-    date_start = coalesce(nullif(EXCLUDED.date_start, ''), facebook_insights.date_start),
-    date_stop = coalesce(nullif(EXCLUDED.date_stop, ''), facebook_insights.date_stop),
+    date_start = EXCLUDED.date_start,
+    date_stop = EXCLUDED.date_stop,
     ad_account = coalesce(nullif(EXCLUDED.ad_account, ''), facebook_insights.ad_account)
   returning *`
 

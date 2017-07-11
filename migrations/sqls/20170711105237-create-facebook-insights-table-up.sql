@@ -7,9 +7,8 @@ create table facebook_insights
   campaign_id text,
   campaign_name text,
   objective text,
-  --'2017-06-29'
-  date_start text,
-  date_stop text,
+  date_start date,  --'2017-06-29'
+  date_stop date,
   ad_account text,
   entry_date timestamp default now() not null,
   entry_update_date timestamp default now() not null
@@ -17,8 +16,7 @@ create table facebook_insights
 
 
 create or replace function entry_update_date() returns trigger as $$
-begin
-	new.entry_update_date := current_timestamp;
+begin new.entry_update_date := current_timestamp;
   return new;
 end
 $$ language plpgsql;

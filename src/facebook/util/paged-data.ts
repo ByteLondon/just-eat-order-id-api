@@ -1,7 +1,7 @@
 import api, { checkStatusCode } from './api'
 import { Insight } from '../insights'
 import { Post } from '../posts'
-import * as Ads from '../../model/facebook-ads'
+import * as Ads from '../../model/facebook-insights'
 import * as Posts from '../../model/facebook-posts'
 
 interface Body {

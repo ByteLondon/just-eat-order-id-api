@@ -13,7 +13,7 @@ export interface Insight {
   objective: string
   date_start: string
   date_stop: string
-  adAccount?: string
+  ad_account?: string
 }
 
 export const fetchInsights = async (

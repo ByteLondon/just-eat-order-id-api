@@ -38,6 +38,6 @@ export const fetchInsights = async (
     'insights',
     adAccountId
   )
-  console.log(results)
+  // console.log(results)
   return results as Insight[]
 }

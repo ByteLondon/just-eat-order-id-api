@@ -33,6 +33,6 @@ export const fetchPosts = async (
     'posts',
     config.pageId.jeUk
   )
-  console.log(results)
+  // console.log(results)
   return results as Post[]
 }

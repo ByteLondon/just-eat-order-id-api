@@ -31,7 +31,7 @@ export const fetchPosts = async (
     qs,
     since,
     'posts',
-    config.pageId.jeUk
+    config.page.jeUk
   )
   // console.log(results)
   return results as Post[]

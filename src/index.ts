@@ -4,6 +4,7 @@ import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
 import { fetchCreatives, fetchCreativeId } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
+import { report } from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
 
@@ -61,6 +62,4 @@ const insights = (params: Params) => {
   })
 }
 
-// insights(params)
-// posts(params)
-creatives(params)
+report()

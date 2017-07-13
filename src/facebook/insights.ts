@@ -2,7 +2,7 @@ import api, { checkStatusCode } from './util/api'
 import * as config from '../config'
 import { fetchPagedData } from './util/paged-data'
 
-//https://developers.facebook.com/docs/marketing-api/insights/fields/v2.9
+// https://developers.facebook.com/docs/marketing-api/insights/fields/v2.9
 export interface Insight {
   ad_id: string
   ad_name: string
@@ -14,6 +14,7 @@ export interface Insight {
   date_start: string
   date_stop: string
   ad_account?: string
+  actions?: Object[]
 }
 
 export const fetchInsights = async (
@@ -28,7 +29,8 @@ export const fetchInsights = async (
       level: 'ad',
       fields:
         'ad_id,ad_name,adset_name,adset_id,campaign_name,campaign_id,objective',
-      time_range: { since, until }
+      time_range: { since, until },
+      action_breakdowns: ['action_link_click_destination']
     }
   }
   const results = await fetchPagedData(

@@ -4,7 +4,7 @@ import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
 import { fetchCreatives, fetchCreativeId } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
-import { report } from './report'
+import { report, insightObjectives } from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
 
@@ -13,7 +13,7 @@ process.on('unhandledRejection', (err, promise) => {
 })
 
 const params = {
-  since: '2017-01-01',
+  since: '2017-06-25',
   until: '2017-07-12'
 }
 
@@ -55,7 +55,7 @@ const creatives = async (params: Params) => {
 }
 
 const insights = (params: Params) => {
-  console.log('posts')
+  console.log('insights')
   forIn(config.adAcount, async (val: string) => {
     await fetchInsights(
       config.facebookAccessToken,
@@ -67,6 +67,7 @@ const insights = (params: Params) => {
 }
 
 // posts(params)
-// insights(params)
+insights(params)
 // creatives(params)
-report()
+// report()
+//insightObjectives()

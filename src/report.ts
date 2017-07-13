@@ -1,13 +1,31 @@
 import * as QueryStream from 'pg-query-stream'
 import { stringify } from 'csv'
 import { createWriteStream } from 'fs'
-import { connect } from './model/core'
+import { connect, JOIN_ALL } from './model/core'
+import * as Insights from './model/facebook-insights'
 
-export const JOIN = `select
-  insights.ad_id, insights.ad_name, insights.adset_id, insights.adset_name, insights.campaign_id, insights.campaign_name, insights.objective, insights.ad_account,
-  posts.post_id, posts.message, posts.permalink_url, posts.link, posts.type
-  from facebook_insights insights full outer join facebook_creatives creatives on insights.ad_id = creatives.ad_id
-  full outer join facebook_posts posts on creatives.post_id = posts.post_id;`
+//maps fb objectives to marketing objectives
+const marketingObjectives = {
+  APP_INSTALLS: 'installs',
+  BRAND_AWARENESS: 'awareness',
+  CONVERSIONS: 'orders',
+  EVENT_RESPONSES: 'engagement',
+  LEAD_GENERATION: 'engagement',
+  LEADS: 'engagement',
+  LINK_CLICKS: '', //special case, need to determine based on 'link' value
+  MOBILE_APP_ENGAGEMENT: 'orders',
+  MOBILE_APP_INSTALLS: 'installs',
+  PRODUCT_CATALOG_SALES: 'orders',
+  POST_ENGAGEMENT: 'engagement',
+  REACH: 'awareness',
+  VIDEO_VIEWS: 'awareness'
+}
+
+const linkClicks = () => {}
+
+export const insightObjectives = async () => {
+  const objectives = await Insights.selectObjective()
+}
 
 const toCSV = () =>
   stringify({
@@ -32,7 +50,7 @@ const toCSV = () =>
 export const report = () => {
   connect((err, client, done) => {
     if (err) throw err
-    const query = new QueryStream(JOIN)
+    const query = new QueryStream(JOIN_ALL)
     const stream = client.query(query)
     //release the client when the stream is finished
     stream.on('end', done)

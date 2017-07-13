@@ -20,6 +20,8 @@ const UPSERT = `
     ad_account = coalesce(nullif(EXCLUDED.ad_account, ''), facebook_insights.ad_account)
   returning *`
 
+const SELECT_OBJECTIVE = `select ad_id, objective from facebook_insights`
+
 export const insert = (values): Promise<Insight> => {
   const {
     ad_id,
@@ -47,3 +49,6 @@ export const insert = (values): Promise<Insight> => {
   ]
   return query(UPSERT, params).then(unpackFirstRow) as Promise<Insight>
 }
+
+export const selectObjective = () =>
+  query(SELECT_OBJECTIVE, []).then(unpackFirstRow)

@@ -4,6 +4,7 @@ import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
 import { fetchCreatives, fetchCreativeId } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
+import { report } from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
 
@@ -12,8 +13,8 @@ process.on('unhandledRejection', (err, promise) => {
 })
 
 const params = {
-  since: '2017-05-06',
-  until: '2017-07-07'
+  since: '2017-01-01',
+  until: '2017-07-12'
 }
 
 interface Params {
@@ -21,12 +22,15 @@ interface Params {
   until: string
 }
 
-const posts = async (params: Params) =>
+const posts = async (params: Params) => {
+  console.log('posts')
   await fetchPosts(config.facebookAccessToken, config.page.jeUk, params.since)
+}
 
 /*There will be ad_ids in the facebook_creatives table which will not 
 be in the facebook_insights table due to those ads being inactive */
 const creatives = async (params: Params) => {
+  console.log('creatives')
   const creativeId = async id =>
     await fetchCreatives(config.facebookAccessToken, id, params.since)
 
@@ -51,6 +55,7 @@ const creatives = async (params: Params) => {
 }
 
 const insights = (params: Params) => {
+  console.log('posts')
   forIn(config.adAcount, async (val: string) => {
     await fetchInsights(
       config.facebookAccessToken,
@@ -61,6 +66,7 @@ const insights = (params: Params) => {
   })
 }
 
-// insights(params)
 // posts(params)
-creatives(params)
+// insights(params)
+// creatives(params)
+report()

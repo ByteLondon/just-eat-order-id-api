@@ -13,7 +13,7 @@
   "private": true,
   "dependencies": {
     "@types/lodash": "^4.14.68",
-    "@types/node": "^8.0.8",
+    "@types/node": "^6.0.81",
     "axios": "^0.16.2",
     "csv": "^1.1.1",
     "db-migrate": "^0.10.0-beta.20",
@@ -22,6 +22,8 @@
     "lodash": "^4.17.4",
     "logfmt": "^1.2.0",
     "pg": "^6.4.0",
+    "pg-copy-streams": "^1.2.0",
+    "pg-query-stream": "^1.0.0",
     "typescript": "^2.4.1"
   },
   "devDependencies": {
@@ -32,6 +34,6 @@
     "ts-node": "^3.2.0"
   },
   "engines": {
-    "node": "8.1.0"
+    "node": "^8.1.0"
   }
 }

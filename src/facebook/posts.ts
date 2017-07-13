@@ -1,7 +1,7 @@
 import api, { checkStatusCode } from './util/api'
 import * as config from '../config'
 import { fetchPagedData } from './util/paged-data'
-//https://developers.facebook.com/docs/graph-api/reference/v2.9/post
+// https://developers.facebook.com/docs/graph-api/reference/v2.9/post
 
 export interface Post {
   permalink_url: string

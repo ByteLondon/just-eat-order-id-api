@@ -1,5 +1,5 @@
 import { query, unpackFirstRow } from './core'
-import { pickBy, isBoolean } from 'lodash'
+import { pickBy, isBoolean, camelCase } from 'lodash'
 import { Insight } from '../facebook/insights'
 
 const UPSERT = `

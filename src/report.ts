@@ -9,15 +9,16 @@ import {
   selectObjectives
 } from './model/report'
 
+// ---------------------------------------------------------------
 //maps fb objectives to marketing objectives
-const marketingObjectives = (link: string) => ({
+const marketingObjectives = (link: string, objective: string) => ({
   APP_INSTALLS: 'installs',
   BRAND_AWARENESS: 'awareness',
   CONVERSIONS: 'orders',
   EVENT_RESPONSES: 'engagement',
   LEAD_GENERATION: 'engagement',
   LEADS: 'engagement',
-  LINK_CLICKS: linkClicks(link), //special case, need to determine based on 'link' value
+  LINK_CLICKS: linkClicks(link, objective), //special case, need to determine based on 'link' value
   MOBILE_APP_ENGAGEMENT: 'orders',
   MOBILE_APP_INSTALLS: 'installs',
   PRODUCT_CATALOG_SALES: 'orders',
@@ -26,8 +27,8 @@ const marketingObjectives = (link: string) => ({
   VIDEO_VIEWS: 'awareness'
 })
 
-const linkClicks = (link: string) => {
-  //TODO handle null case
+const linkClicks = (link: string, objective: string) => {
+  if (!link) return null
   const visual = /facebook.com\[^[a-zA-Z0-9_.-]*$\/(videos|photos)/.test(link)
   const justeat = /just-eat.co.uk/.test(link)
   // const canvas = /fb.com\/canvas_doc/.test(link)
@@ -35,10 +36,13 @@ const linkClicks = (link: string) => {
   const app = /itunes.apple.com|play.google.com/.test(link)
   const chatbot = /fb.me/.test(link)
   //TODO: btas
+  const appInstallOrOrder =
+    objective == 'APP_INSTALLS' ? 'app installs' : 'orders'
+
   return visual
     ? 'awareness'
     : app
-      ? 'app installs/orders'
+      ? appInstallOrOrder
       : chatbot ? 'engagement' : justeat ? 'orders' : 'orders'
 }
 
@@ -48,20 +52,18 @@ interface Objective {
   link: string | null
 }
 
-/* TODO: before running this, need to call a function that finds
-all ads with the same name, copy the post data from the only ad in 
-the group that has the post data and copy it to all those ads */
 export const updateMarketingObjectives = async () => {
   const objectives = await selectObjectives()
   return Promise.all(
     objectives.map((a: Objective) =>
       updateMarketingObjective([
         a.adId,
-        marketingObjectives(a.link)[a.objective]
+        marketingObjectives(a.link, a.objective)[a.objective]
       ])
     )
   )
 }
+// ---------------------------------------------------------------
 
 const toCSV = () =>
   stringify({

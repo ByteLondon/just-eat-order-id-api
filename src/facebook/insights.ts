@@ -14,7 +14,7 @@ export interface Insight {
   date_start: string
   date_stop: string
   ad_account?: string
-  actions?: Object[]
+  // actions?: Object[]
 }
 
 export const fetchInsights = async (
@@ -29,8 +29,8 @@ export const fetchInsights = async (
       level: 'ad',
       fields:
         'ad_id,ad_name,adset_name,adset_id,campaign_name,campaign_id,objective',
-      time_range: { since, until },
-      action_breakdowns: ['action_link_click_destination']
+      time_range: { since, until }
+      // action_breakdowns: ['action_link_click_destination']
     }
   }
   const results = await fetchPagedData(

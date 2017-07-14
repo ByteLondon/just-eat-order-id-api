@@ -8,6 +8,7 @@ import {
   updateMarketingObjective,
   selectObjectives
 } from './model/report'
+import { PostType } from './facebook/posts'
 
 // ---------------------------------------------------------------
 //maps fb objectives to marketing objectives
@@ -38,7 +39,6 @@ const linkClicks = (link: string, objective: string) => {
   //TODO: btas
   const appInstallOrOrder =
     objective == 'APP_INSTALLS' ? 'app installs' : 'orders'
-
   return visual
     ? 'awareness'
     : app
@@ -64,6 +64,18 @@ export const updateMarketingObjectives = async () => {
   )
 }
 // ---------------------------------------------------------------
+
+// type = link, status, photo, video, offer
+const postFormat = (link: string, objective: string, type: PostType) => {
+  if (type == 'link') {
+    return `link, ${linkClicks(link, objective)}`
+  } else if (type == 'offer') {
+    return type
+  } else {
+    return type
+    //status, photo or video
+  }
+}
 
 const toCSV = () =>
   stringify({

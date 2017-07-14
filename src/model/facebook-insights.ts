@@ -1,5 +1,5 @@
 import { query, unpackFirstRow } from './core'
-import { pickBy, isBoolean } from 'lodash'
+import { pickBy, isBoolean, camelCase } from 'lodash'
 import { Insight } from '../facebook/insights'
 
 const UPSERT = `
@@ -19,6 +19,8 @@ const UPSERT = `
     date_stop = EXCLUDED.date_stop,
     ad_account = coalesce(nullif(EXCLUDED.ad_account, ''), facebook_insights.ad_account)
   returning *`
+
+const SELECT_OBJECTIVE = `select ad_id, objective from facebook_insights`
 
 export const insert = (values): Promise<Insight> => {
   const {

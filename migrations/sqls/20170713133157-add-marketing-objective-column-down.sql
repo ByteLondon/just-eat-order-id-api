@@ -1,0 +1,1 @@
+alter table facebook_insights drop column marketing_objective;

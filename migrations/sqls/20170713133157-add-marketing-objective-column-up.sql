@@ -1,0 +1,1 @@
+alter table facebook_insights add column marketing_objective text;

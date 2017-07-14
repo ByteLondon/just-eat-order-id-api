@@ -49,6 +49,3 @@ export const insert = (values): Promise<Insight> => {
   ]
   return query(UPSERT, params).then(unpackFirstRow) as Promise<Insight>
 }
-
-export const selectObjective = () =>
-  query(SELECT_OBJECTIVE, []).then(unpackFirstRow)

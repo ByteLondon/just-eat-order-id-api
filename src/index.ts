@@ -66,12 +66,10 @@ const insights = (params: Params) => {
   })
 }
 
-// posts(params)
+posts(params)
 insights(params)
-// creatives(params)
+creatives(params)
 // report()
 //insightObjectives()
 
 // updateMarketingObjectives().then(console.log).catch(console.error)
-
-// update()

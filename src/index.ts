@@ -4,6 +4,7 @@ import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
 import { fetchCreatives, fetchCreativeId } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
+import * as Insights from './model/facebook-insights'
 import { report, updateMarketingObjectives } from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
@@ -13,8 +14,8 @@ process.on('unhandledRejection', (err, promise) => {
 })
 
 const params = {
-  since: '2017-06-25',
-  until: '2017-07-12'
+  since: '2016-10-01',
+  until: '2017-06-01'
 }
 
 interface Params {
@@ -66,9 +67,10 @@ const insights = (params: Params) => {
   })
 }
 
-posts(params)
+// posts(params)
 insights(params)
-creatives(params)
+// creatives(params)
+
 // report()
 //insightObjectives()
 

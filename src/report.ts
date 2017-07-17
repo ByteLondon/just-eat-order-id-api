@@ -12,7 +12,7 @@ import { PostType } from './facebook/posts'
 
 // ---------------------------------------------------------------
 //maps fb objectives to marketing objectives
-const marketingObjectives = (link: string, objective: string) => ({
+export const marketingObjectives = (link: string, objective: string) => ({
   APP_INSTALLS: 'installs',
   BRAND_AWARENESS: 'awareness',
   CONVERSIONS: 'orders',

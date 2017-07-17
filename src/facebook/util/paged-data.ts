@@ -82,11 +82,11 @@ const insertData = async (
     if (objectId) {
       if (table == 'insights') {
         const values = Object.assign({ ad_account: objectId }, a)
-        const ads = await Ads.insert(values)
+        const ads = await Ads.update(values)
         return ads
       } else if (table == 'posts') {
         const values = Object.assign({ page_id: objectId }, a)
-        const posts = await Posts.insert(values)
+        const posts = await Posts.update(values)
         return posts
       }
     }
@@ -113,6 +113,7 @@ const processPages = async (
         cb(new Error(body.error))
       }
     } else if (body.data) {
+      // console.log(body)
       if (table) {
         //only write to db if table is insights or posts (not creative)
         await insertData(table, objectId, body.data)

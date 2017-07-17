@@ -4,7 +4,7 @@ import { Creative } from '../facebook/creatives'
 
 const INSERT = `
   insert into facebook_creatives
-  (ad_id, post_id) values ($1, $2) on conflict do nothing`
+  (ad_id, post_id) values ($1, $2)`
 
 export const insert = (values): Promise<Creative> => {
   const { ad_id, post_id } = values

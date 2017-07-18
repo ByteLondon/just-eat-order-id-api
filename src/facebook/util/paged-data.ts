@@ -113,7 +113,6 @@ const processPages = async (
         cb(new Error(body.error))
       }
     } else if (body.data) {
-      // console.log(body)
       if (table) {
         //only write to db if table is insights or posts (not creative)
         await insertData(table, objectId, body.data)

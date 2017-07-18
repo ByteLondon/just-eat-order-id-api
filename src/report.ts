@@ -10,16 +10,15 @@ import {
 } from './model/report'
 import { PostType } from './facebook/posts'
 
-// ---------------------------------------------------------------
 //maps fb objectives to marketing objectives
-export const marketingObjectives = (link: string, objective: string) => ({
+const marketingObjectives = (link: string) => ({
   APP_INSTALLS: 'installs',
   BRAND_AWARENESS: 'awareness',
   CONVERSIONS: 'orders',
   EVENT_RESPONSES: 'engagement',
   LEAD_GENERATION: 'engagement',
   LEADS: 'engagement',
-  LINK_CLICKS: linkClicks(link, objective), //special case, need to determine based on 'link' value
+  LINK_CLICKS: linkClicks(link), //special case, need to determine based on 'link' value
   MOBILE_APP_ENGAGEMENT: 'orders',
   MOBILE_APP_INSTALLS: 'installs',
   PRODUCT_CATALOG_SALES: 'orders',
@@ -28,22 +27,23 @@ export const marketingObjectives = (link: string, objective: string) => ({
   VIDEO_VIEWS: 'awareness'
 })
 
-const linkClicks = (link: string, objective: string) => {
+//exported for tests
+export const linkClicks = (link: string) => {
   if (!link) return null
-  const visual = /facebook.com\[^[a-zA-Z0-9_.-]*$\/(videos|photos)/.test(link)
+  const visual = /facebook.com\/[A-Za-z0-9]+\/(videos|photos)/.test(link)
   const justeat = /just-eat.co.uk/.test(link)
-  // const canvas = /fb.com\/canvas_doc/.test(link)
-  // const ig = /instagram.com/.test(link)
+  const canvas = /fb.com\/canvas_doc/.test(link)
+  const ig = /instagram.com/.test(link)
   const app = /itunes.apple.com|play.google.com/.test(link)
   const chatbot = /fb.me/.test(link)
-  //TODO: btas
-  const appInstallOrOrder =
-    objective == 'APP_INSTALLS' ? 'app installs' : 'orders'
+  const btas = /thebtas.co.uk/.test(link)
   return visual
     ? 'awareness'
     : app
-      ? appInstallOrOrder
-      : chatbot ? 'engagement' : justeat ? 'orders' : 'orders'
+      ? 'orders/app installs'
+      : chatbot || canvas || btas || ig
+        ? 'engagement'
+        : justeat ? 'orders' : 'orders'
 }
 
 interface Objective {
@@ -58,17 +58,16 @@ export const updateMarketingObjectives = async () => {
     objectives.map((a: Objective) =>
       updateMarketingObjective([
         a.adId,
-        marketingObjectives(a.link, a.objective)[a.objective]
+        marketingObjectives(a.link)[a.objective]
       ])
     )
   )
 }
-// ---------------------------------------------------------------
 
 // type = link, status, photo, video, offer
 const postFormat = (link: string, objective: string, type: PostType) => {
   if (type == 'link') {
-    return `link, ${linkClicks(link, objective)}`
+    return `link, ${linkClicks(link)}`
   } else if (type == 'offer') {
     return type
   } else {

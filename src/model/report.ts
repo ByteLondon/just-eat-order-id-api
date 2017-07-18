@@ -2,7 +2,8 @@ import { query } from './core'
 export const JOIN_ALL = `
 select insights.ad_id, insights.ad_name, insights.adset_id, insights.adset_name, insights.campaign_id, insights.campaign_name, insights.objective, insights.ad_account,
 posts.post_id, posts.message, posts.permalink_url, posts.link, posts.type
-from left join facebook_creatives creatives using (ad_id)
+from facebook_insights insights 
+  left join facebook_creatives creatives using (ad_id)
   left join facebook_posts posts using (post_id)`
 
 // Selects FB objectives

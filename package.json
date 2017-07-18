@@ -6,6 +6,7 @@
   "scripts": {
     "prestart": "tsc",
     "start": "node lib/index.js",
+    "clean": "find src test -name '*.js' -exec rm {} \\;",
     "test": "mocha -r ts-node/register --colors --recursive 'test/**/*.test.ts'"
   },
   "author": "Byte London Ltd.",

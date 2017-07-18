@@ -4,7 +4,6 @@ import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
 import { fetchCreatives, fetchCreativeId } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
-import * as Insights from './model/facebook-insights'
 import { report, updateMarketingObjectives } from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
@@ -50,12 +49,13 @@ const creatives = async (params: Params) => {
           post_id: creative.effective_object_story_id
         })
       },
-      (err, results) => results.forEach(async a => await Creatives.insert(a))
+      //does this have to be Promise.all rather than a async function?
+      (err, results) => results.forEach(async a => await Creatives.update(a))
     )
   })
 }
 
-const insights = (params: Params) => {
+export const insights = (params: Params) => {
   console.log('insights')
   forIn(config.adAcount, async (val: string) => {
     await fetchInsights(
@@ -70,8 +70,15 @@ const insights = (params: Params) => {
 // posts(params)
 insights(params)
 // creatives(params)
+// updateMarketingObjectives().then(console.log).catch(console.error)
 
 // report()
-//insightObjectives()
 
-// updateMarketingObjectives().then(console.log).catch(console.error)
+// const populateDBTables = params => {
+//   posts(params)
+//   creatives(params)
+//   insights(params)
+//   updateMarketingObjectives().then(console.log).catch(console.error)
+// }
+
+// populateDBTables(params)

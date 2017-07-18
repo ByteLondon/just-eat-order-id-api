@@ -68,9 +68,9 @@ export const insights = (params: Params) => {
 }
 
 // posts(params)
-insights(params)
+// insights(params)
 // creatives(params)
-// updateMarketingObjectives().then(console.log).catch(console.error)
+updateMarketingObjectives().then(console.log).catch(console.error)
 
 // report()
 

@@ -45,6 +45,14 @@ export interface Creative {
   effective_object_story_id: string
 }
 
+// export interface FetchCreativeId {
+//   fetchCreativeId: (
+//     accessToken: string,
+//     adAccountId: string,
+//     since: string
+//   ) => Promise<CreativeId[]>
+// }
+
 export const fetchCreativeId = async (
   accessToken: string,
   adAccountId: string,
@@ -57,7 +65,6 @@ export const fetchCreativeId = async (
       since
     }
   }
-
   const results = await fetchPagedData(
     `/act_${adAccountId}/ads`,
     qs,
@@ -65,7 +72,7 @@ export const fetchCreativeId = async (
     null, //Don't add data to DB
     adAccountId
   )
-  return results as CreativeId[]
+  return results as Promise<CreativeId[]>
 }
 
 // This function doesn't call fetchPagedData as it doesn't need to paginate
@@ -84,7 +91,7 @@ export const fetchCreatives = async (
   return api
     .get(`/${creativeId}`, qs)
     .then(checkStatusCode)
-    .then((res: Creative) => res)
+    .then((res: Creative) => res) as Promise<Creative>
 }
 
 // https://developers.facebook.com/docs/marketing-api/reference/ad-creative

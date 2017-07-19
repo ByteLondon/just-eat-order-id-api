@@ -71,7 +71,6 @@ export const fetchPagedData = async (
   )
 }
 
-//TODO: add creative type to data
 //TODO: test
 const insertData = async (
   table: Table,
@@ -82,11 +81,11 @@ const insertData = async (
     if (objectId) {
       if (table == 'insights') {
         const values = Object.assign({ ad_account: objectId }, a)
-        const ads = await Ads.insert(values)
+        const ads = await Ads.update(values)
         return ads
       } else if (table == 'posts') {
         const values = Object.assign({ page_id: objectId }, a)
-        const posts = await Posts.insert(values)
+        const posts = await Posts.update(values)
         return posts
       }
     }

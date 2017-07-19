@@ -4,7 +4,7 @@ import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
 import { fetchCreatives, fetchCreativeId } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
-import { report } from './report'
+import { report, updateMarketingObjectives, updatePostFormats } from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
 
@@ -13,8 +13,8 @@ process.on('unhandledRejection', (err, promise) => {
 })
 
 const params = {
-  since: '2017-01-01',
-  until: '2017-07-12'
+  since: '2016-10-01',
+  until: '2017-06-01'
 }
 
 interface Params {
@@ -49,13 +49,14 @@ const creatives = async (params: Params) => {
           post_id: creative.effective_object_story_id
         })
       },
-      (err, results) => results.forEach(async a => await Creatives.insert(a))
+      //does this have to be Promise.all rather than a async function?
+      (err, results) => results.forEach(async a => await Creatives.update(a))
     )
   })
 }
 
-const insights = (params: Params) => {
-  console.log('posts')
+export const insights = (params: Params) => {
+  console.log('insights')
   forIn(config.adAcount, async (val: string) => {
     await fetchInsights(
       config.facebookAccessToken,
@@ -67,6 +68,8 @@ const insights = (params: Params) => {
 }
 
 // posts(params)
-// insights(params)
+insights(params)
 // creatives(params)
-report()
+// updateMarketingObjectives().then().catch(console.error)
+// updatePostFormats().then().catch(console.error)
+// report()

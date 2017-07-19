@@ -5,7 +5,6 @@ import * as Insights from './model/facebook-insights'
 import { connect, query } from './model/core'
 import {
   JOIN_ALL,
-  REPORT,
   updateMarketingObjective,
   updatePostFormat,
   selectObjectives,
@@ -97,8 +96,8 @@ export const updatePostFormats = async () => {
   )
 }
 
-// type = link, status, photo, video, offer
-const postFormat = (link: string, type: PostType) => {
+//exported for tests
+export const postFormat = (link: string, type: PostType) => {
   if (!type) return null
   if (type == 'link') {
     const linkType = keys(pickBy(links(link)))

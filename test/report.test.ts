@@ -1,6 +1,6 @@
 import 'mocha'
 import { expect } from 'chai'
-import { linkClicks } from '../src/report'
+import { linkClicks, postFormat } from '../src/report'
 
 describe('LINK_CLICKS objective will map to:', () => {
   it('correct marketing objective', () => {
@@ -33,5 +33,38 @@ describe('LINK_CLICKS objective will map to:', () => {
     expect(linkClicks('https://fb.com/canvas_doc/205771613217445')).to.equal(
       'engagement'
     )
+  })
+})
+
+describe('post `type` will map to:', () => {
+  it('relativant post format', () => {
+    expect(postFormat('https://www.just-eat.co.uk/', 'link')).to.equal(
+      'link, justeat'
+    )
+    expect(
+      postFormat('https://itunes.apple.com/app/id566347057', 'link')
+    ).to.equal('link, app')
+
+    expect(postFormat(null, 'offer')).to.equal('offer')
+
+    expect(
+      postFormat(
+        'https://www.facebook.com/justeat/videos/10154977460747552/',
+        'link'
+      )
+    ).to.equal('link, videos')
+
+    expect(
+      postFormat(
+        'http://play.google.com/store/apps/details?id=com.justeat.app.uk',
+        'link'
+      )
+    ).to.equal('link, app')
+
+    expect(
+      postFormat('https://fb.com/canvas_doc/205771613217445', 'link')
+    ).to.equal('link, canvas')
+
+    expect(postFormat(null, 'link')).to.equal('link')
   })
 })

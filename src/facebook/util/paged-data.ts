@@ -71,7 +71,6 @@ export const fetchPagedData = async (
   )
 }
 
-//TODO: add creative type to data
 //TODO: test
 const insertData = async (
   table: Table,

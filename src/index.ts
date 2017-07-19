@@ -68,18 +68,8 @@ export const insights = (params: Params) => {
 }
 
 // posts(params)
-// insights(params)
+insights(params)
 // creatives(params)
 // updateMarketingObjectives().then().catch(console.error)
 // updatePostFormats().then().catch(console.error)
-
-report()
-
-// const populateDBTables = params => {
-//   posts(params)
-//   creatives(params)
-//   insights(params)
-//   updateMarketingObjectives().then(console.log).catch(console.error)
-// }
-
-// populateDBTables(params)
+// report()

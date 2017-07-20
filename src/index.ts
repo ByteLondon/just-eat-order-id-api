@@ -49,6 +49,6 @@ export const creatives = (params: Params) => {
 // posts(params)
 // insights(params)
 // updateMarketingObjectives().then().catch(console.error)
-// updatePostFormats().then().catch(console.error)
+updatePostFormats().then().catch(console.error)
 // report()
-creatives(params)
+// creatives(params)

@@ -7,7 +7,11 @@ from facebook_insights insights
   left join facebook_creatives creatives using (ad_id)
   left join facebook_posts posts using (post_id)`
 
-const SELECT_TYPES = `select post_id, type, link from facebook_posts`
+const SELECT_TYPES = `
+select insights.ad_name, posts.post_id, posts.type, posts.link
+from facebook_insights insights 
+  inner join facebook_creatives creatives using (ad_id)
+  right join facebook_posts posts using (post_id)`
 
 // Adds Marketing objectives
 const UPDATE_MARKETING_OBJECTIVES = `update facebook_insights set marketing_objective = $2 where ad_id = $1`

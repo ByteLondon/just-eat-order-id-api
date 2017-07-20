@@ -82,6 +82,7 @@ export const updateMarketingObjectives = async () => {
 }
 
 interface PostFormat {
+  adName?: string
   postId: string
   type: PostType
   link: string | null
@@ -91,17 +92,28 @@ export const updatePostFormats = async () => {
   const types = await selectTypes()
   return Promise.all(
     types.map((a: PostFormat) =>
-      updatePostFormat([a.postId, postFormat(a.link, a.type)])
+      updatePostFormat([a.postId, postFormat(a.link, a.type, a.adName)])
     )
   )
 }
 
+const carousel = (adName, regex) =>
+  adName
+    ? regex.test(adName.toLowerCase().replace(/\s+/g, '').replace(/_/g, ''))
+    : null
+
 //exported for tests
-export const postFormat = (link: string, type: PostType) => {
+export const postFormat = (link: string, type: PostType, adName: string) => {
   if (!type) return null
+  const imageCarousel = carousel(adName, /imagecarousel/)
+  const videoCarousel = carousel(adName, /videocarousel/)
+  // 👇 This doesn't ignore /videocarousel/ or /imagecarousel/ but they would be caught earlier in the ternary
+  const someCarousel = carousel(adName, /carousel/)
   if (type == 'link') {
     const linkType = keys(pickBy(links(link)))
-    return `link${linkType.length > 0 ? ', ' + linkType : ''}`
+    return `link${linkType.length > 0 ? ', ' + linkType : ''}${imageCarousel
+      ? ', image carousel'
+      : videoCarousel ? ', video carousel' : someCarousel ? ', carousel' : ''}`
   } else {
     return type
   }

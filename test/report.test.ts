@@ -38,33 +38,49 @@ describe('LINK_CLICKS objective will map to:', () => {
 
 describe('post `type` will map to:', () => {
   it('relativant post format', () => {
-    expect(postFormat('https://www.just-eat.co.uk/', 'link')).to.equal(
-      'link, justeat'
-    )
     expect(
-      postFormat('https://itunes.apple.com/app/id566347057', 'link')
-    ).to.equal('link, app')
+      postFormat(
+        'https://www.just-eat.co.uk/',
+        'link',
+        'Orders // Facebook // DR // Cyber Monday Discount // Web // Lookalike 1% B - App & Web Customers last 3 months'
+      )
+    ).to.equal('link, justeat')
+    expect(
+      postFormat(
+        'https://itunes.apple.com/app/id566347057',
+        'link',
+        'Bear Carousel - 10154983170762552'
+      )
+    ).to.equal('link, app, carousel')
 
-    expect(postFormat(null, 'offer')).to.equal('offer')
+    expect(postFormat(null, 'offer', 'NYDVideo_Pizza')).to.equal('offer')
 
     expect(
       postFormat(
         'https://www.facebook.com/justeat/videos/10154977460747552/',
-        'link'
+        'link',
+        'Pizza Steam Video Carousel 2'
       )
-    ).to.equal('link, videos')
+    ).to.equal('link, videos, video carousel')
 
     expect(
       postFormat(
         'http://play.google.com/store/apps/details?id=com.justeat.app.uk',
-        'link'
+        'link',
+        'DARK_image_Carousel Post_West Image Brompton'
       )
-    ).to.equal('link, app')
+    ).to.equal('link, app, image carousel')
 
     expect(
-      postFormat('https://fb.com/canvas_doc/205771613217445', 'link')
+      postFormat('https://fb.com/canvas_doc/205771613217445', 'link', null)
     ).to.equal('link, canvas')
 
-    expect(postFormat(null, 'link')).to.equal('link')
+    expect(
+      postFormat(
+        null,
+        'link',
+        'DARK_Video Link Post_Chef Factor_Custom Audience Creative'
+      )
+    ).to.equal('link')
   })
 })

@@ -31,7 +31,6 @@ interface PostsQs {
   params: {
     access_token: string
     fields: string
-    ad_format?: string
     since?: string | number
   }
 }
@@ -83,19 +82,16 @@ const insertData = async (
     if (objectId) {
       if (table == 'insights') {
         const values = Object.assign({ ad_account: objectId }, a)
-        const ads = await Ads.update(values)
-        return ads
+        await Ads.update(values)
       } else if (table == 'posts') {
         const values = Object.assign({ page_id: objectId }, a)
-        const posts = await Posts.update(values)
-        return posts
+        await Posts.update(values)
       } else if (table == 'creatives') {
         const values = {
-          ad_id: a.adcreatives.data[0].id,
+          ad_id: a.id,
           post_id: a.adcreatives.data[0].effective_object_story_id
         }
-        const creatives = await Creatives.update(values)
-        return creatives
+        await Creatives.update(values)
       }
     }
   })

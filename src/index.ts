@@ -4,7 +4,12 @@ import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
 import { fetchCreatives, FetchCreatives } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
-import { report, updateMarketingObjectives, updatePostFormats } from './report'
+import {
+  report,
+  updateMarketingObjectives,
+  updatePostFormats,
+  updateAdFormats
+} from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
 
@@ -49,6 +54,6 @@ export const creatives = (params: Params) => {
 // posts(params)
 // insights(params)
 // updateMarketingObjectives().then().catch(console.error)
-updatePostFormats().then().catch(console.error)
-// report()
+// updateAdFormats().then().catch(console.error)
+report()
 // creatives(params)

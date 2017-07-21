@@ -84,3 +84,13 @@ describe('post `type` will map to:', () => {
     ).to.equal('link')
   })
 })
+
+//TODO: test adFormat using the bellow
+//EXAMPLE AD_NAMEs:
+// DARK_Image Carousel Post_W1S
+//  DARK_Image Link Post_SE8_Indian
+//  Pizza Steam Video Carousel 2
+//  Hands DR 2
+//  DARK_Image Link Post_G13_Indian
+//  DARK_Image Link Post_Paisley_burger
+//  New Brand // Video Post Ad // Video Views // TVC

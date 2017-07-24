@@ -10,11 +10,12 @@ export interface CreativeId {
     data: [
       {
         id: string
+        effective_object_story_id: string
       }
     ]
   }
   created_time: string
-  insights: {
+  insights?: {
     data: [
       {
         date_start: string
@@ -45,15 +46,13 @@ export interface Creative {
   effective_object_story_id: string
 }
 
-// export interface FetchCreativeId {
-//   fetchCreativeId: (
-//     accessToken: string,
-//     adAccountId: string,
-//     since: string
-//   ) => Promise<CreativeId[]>
-// }
+export interface FetchCreatives {
+  (accessToken: string, adAccountId: string, since: string): Promise<
+    CreativeId[]
+  >
+}
 
-export const fetchCreativeId = async (
+export const fetchCreatives = async (
   accessToken: string,
   adAccountId: string,
   since: string
@@ -61,7 +60,7 @@ export const fetchCreativeId = async (
   const qs = {
     params: {
       access_token: accessToken,
-      fields: 'adcreatives,created_time,insights,creative',
+      fields: 'adcreatives{effective_object_story_id},created_time,creative',
       since
     }
   }
@@ -69,29 +68,11 @@ export const fetchCreativeId = async (
     `/act_${adAccountId}/ads`,
     qs,
     since,
-    null, //Don't add data to DB
+    'creatives',
     adAccountId
   )
+  console.log(results)
   return results as Promise<CreativeId[]>
-}
-
-// This function doesn't call fetchPagedData as it doesn't need to paginate
-export const fetchCreatives = async (
-  accessToken: string,
-  creativeId: string,
-  since: string
-): Promise<Creative> => {
-  const qs = {
-    params: {
-      access_token: accessToken,
-      fields: 'effective_object_story_id',
-      since
-    }
-  }
-  return api
-    .get(`/${creativeId}`, qs)
-    .then(checkStatusCode)
-    .then((res: Creative) => res) as Promise<Creative>
 }
 
 // https://developers.facebook.com/docs/marketing-api/reference/ad-creative

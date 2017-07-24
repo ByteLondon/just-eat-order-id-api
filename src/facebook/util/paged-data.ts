@@ -1,12 +1,14 @@
 import api, { checkStatusCode } from './api'
 import { Insight } from '../insights'
 import { Post } from '../posts'
+import { CreativeId } from '../creatives'
 import * as Ads from '../../model/facebook-insights'
 import * as Posts from '../../model/facebook-posts'
+import * as Creatives from '../../model/facebook-creatives'
 
 interface Body {
   error?: any
-  data?: Insight[] | Post[]
+  data?: Insight[] & Post[] & CreativeId[]
   paging?: {
     cursors: {
       before: string
@@ -50,7 +52,7 @@ export const determinePagination = (body, since) => {
   }
 }
 
-type Table = 'insights' | 'posts'
+type Table = 'insights' | 'posts' | 'creatives'
 
 export const fetchPagedData = async (
   url: string,
@@ -71,22 +73,25 @@ export const fetchPagedData = async (
   )
 }
 
-//TODO: test
 const insertData = async (
   table: Table,
   objectId: string,
-  data: (Insight | Post)[]
+  data: (CreativeId & Insight & Post)[]
 ) => {
-  data.forEach(async a => {
+  data.forEach(async (a: CreativeId & Insight & Post) => {
     if (objectId) {
       if (table == 'insights') {
         const values = Object.assign({ ad_account: objectId }, a)
-        const ads = await Ads.update(values)
-        return ads
+        await Ads.update(values)
       } else if (table == 'posts') {
         const values = Object.assign({ page_id: objectId }, a)
-        const posts = await Posts.update(values)
-        return posts
+        await Posts.update(values)
+      } else if (table == 'creatives') {
+        const values = {
+          ad_id: a.id,
+          post_id: a.adcreatives.data[0].effective_object_story_id
+        }
+        await Creatives.update(values)
       }
     }
   })
@@ -100,7 +105,7 @@ const processPages = async (
   objectId: string,
   cb
 ) =>
-  api.get(url, qs).then(checkStatusCode).then(async (body: Body) => {
+  api.get(url, qs).then(checkStatusCode).then(async (body: Body | any) => {
     if (body.error) {
       if (body.error.code === 17 && body.error.is_transient) {
         console.log('rate limit at', new Date())
@@ -113,7 +118,6 @@ const processPages = async (
       }
     } else if (body.data) {
       if (table) {
-        //only write to db if table is insights or posts (not creative)
         await insertData(table, objectId, body.data)
       }
       if (determinePagination(body, since)) {

@@ -8,10 +8,24 @@ const INSERT = `
   insert into facebook_creatives
   (ad_id, post_id) values ($1, $2)`
 
+// const INSERT = `
+//   insert into facebook_creatives
+//     (ad_id, post_id)
+//   select $1, $2
+//   where not exists (select 1 from facebook_creatives where ad_id = $1 and post_id = $2)`
+
+const SELECT = `select * from facebook_creatives where ad_id = $1 and post_id = $2`
+
+export interface Update {
+  ({ ad_id, post_id }): Promise<Creative>
+}
+
 export const update = (values): Promise<Creative> => {
   const { ad_id, post_id } = values
-  query(DELETE_BEFORE_UPDATE, [ad_id])
-  return query(INSERT, [ad_id, post_id]).then(unpackFirstRow) as Promise<
-    Creative
-  >
+  return query(INSERT, [ad_id, post_id]) as Promise<Creative>
+}
+
+export const select = (values): Promise<Creative> => {
+  const { ad_id, post_id } = values
+  return query(SELECT, [ad_id, post_id])
 }

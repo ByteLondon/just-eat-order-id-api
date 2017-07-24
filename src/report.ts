@@ -8,7 +8,9 @@ import {
   updateMarketingObjective,
   updatePostFormat,
   selectObjectives,
-  selectTypes
+  selectTypes,
+  selectAdNames,
+  updateAdFormat
 } from './model/report'
 import { PostType } from './facebook/posts'
 import { keys, pickBy } from 'lodash'
@@ -82,6 +84,7 @@ export const updateMarketingObjectives = async () => {
 }
 
 interface PostFormat {
+  adName?: string
   postId: string
   type: PostType
   link: string | null
@@ -91,17 +94,53 @@ export const updatePostFormats = async () => {
   const types = await selectTypes()
   return Promise.all(
     types.map((a: PostFormat) =>
-      updatePostFormat([a.postId, postFormat(a.link, a.type)])
+      updatePostFormat([a.postId, postFormat(a.link, a.type, a.adName)])
     )
   )
 }
 
+const clean = name => name.toLowerCase().replace(/\s+/g, '').replace(/_/g, '')
+const carousel = (adName, regex) => (adName ? regex.test(clean(adName)) : null)
+
+const formats = [
+  'image',
+  'video',
+  'carousel',
+  'link',
+  'status',
+  'offer',
+  'photos',
+  'videos',
+  'event',
+  'canvas',
+  'leadform',
+  'appinstall',
+  'instagram'
+]
+
+// const assetVolumn = adName =>
+//   adName.includes('carousel') ? 'carousel' : 'single'
+
+export const adFormat = (adName: string) =>
+  formats.filter((a: string) => clean(adName).includes(a)).join(' ')
+
+export const updateAdFormats = async () => {
+  const ads = await selectAdNames()
+  return Promise.all(ads.map(a => updateAdFormat([a.adId, adFormat(a.adName)])))
+}
+
 //exported for tests
-export const postFormat = (link: string, type: PostType) => {
+export const postFormat = (link: string, type: PostType, adName: string) => {
   if (!type) return null
+  const imageCarousel = carousel(adName, /imagecarousel/)
+  const videoCarousel = carousel(adName, /videocarousel/)
+  // 👇 This doesn't ignore /videocarousel/ or /imagecarousel/ but they would be caught earlier in the ternary
+  const someCarousel = carousel(adName, /carousel/)
   if (type == 'link') {
     const linkType = keys(pickBy(links(link)))
-    return `link${linkType.length > 0 ? ', ' + linkType : ''}`
+    return `link${linkType.length > 0 ? ', ' + linkType : ''}${imageCarousel
+      ? ', image carousel'
+      : videoCarousel ? ', video carousel' : someCarousel ? ', carousel' : ''}`
   } else {
     return type
   }
@@ -128,6 +167,12 @@ const toCSV = () =>
     ],
     header: true
   })
+
+// const toCSV = () =>
+//   stringify({
+//     columns: ['ad_id', 'freq'],
+//     header: true
+//   })
 
 export const report = async () => {
   connect((err, client, done) => {

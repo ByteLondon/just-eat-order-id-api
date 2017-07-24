@@ -14,9 +14,11 @@ export interface Insight {
   date_start: string
   date_stop: string
   ad_account?: string
-  actions?: Object[]
+  // actions?: Object[]
 }
 
+//TODO: when changing the DB scheme, change ad_account
+//to account_id, and get it directly from fetchInsights
 export const fetchInsights = async (
   accessToken: string,
   adAccountId: string,
@@ -28,9 +30,9 @@ export const fetchInsights = async (
       access_token: accessToken,
       level: 'ad',
       fields:
-        'ad_id,ad_name,adset_name,adset_id,campaign_name,campaign_id,objective,actions',
-      time_range: { since, until },
-      action_breakdowns: 'action_carousel_card_id'
+        'ad_id,ad_name,adset_name,adset_id,campaign_name,campaign_id,objective',
+      time_range: { since, until }
+      // action_breakdowns: 'action_carousel_card_id'
     }
   }
   const results = await fetchPagedData(

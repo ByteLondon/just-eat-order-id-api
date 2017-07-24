@@ -2,9 +2,14 @@ import { logger } from './logger'
 import * as config from './config'
 import { fetchInsights } from './facebook/insights'
 import { fetchPosts } from './facebook/posts'
-import { fetchCreatives, fetchCreativeId } from './facebook/creatives'
+import { fetchCreatives, FetchCreatives } from './facebook/creatives'
 import * as Creatives from './model/facebook-creatives'
-import { report, updateMarketingObjectives, updatePostFormats } from './report'
+import {
+  report,
+  updateMarketingObjectives,
+  updatePostFormats,
+  updateAdFormats
+} from './report'
 import * as async from 'async'
 import { forIn } from 'lodash'
 
@@ -27,34 +32,6 @@ const posts = async (params: Params) => {
   await fetchPosts(config.facebookAccessToken, config.page.jeUk, params.since)
 }
 
-/*There will be ad_ids in the facebook_creatives table which will not 
-be in the facebook_insights table due to those ads being inactive */
-const creatives = async (params: Params) => {
-  console.log('creatives')
-  const creativeId = async id =>
-    await fetchCreatives(config.facebookAccessToken, id, params.since)
-
-  forIn(config.adAcount, async (val: string) => {
-    const data = await fetchCreativeId(
-      config.facebookAccessToken,
-      val,
-      params.since
-    )
-    async.map(
-      data,
-      async (ad, next) => {
-        const creative = await creativeId(ad.adcreatives.data[0].id)
-        next(null, {
-          ad_id: ad.id,
-          post_id: creative.effective_object_story_id
-        })
-      },
-      //does this have to be Promise.all rather than a async function?
-      (err, results) => results.forEach(async a => await Creatives.update(a))
-    )
-  })
-}
-
 export const insights = (params: Params) => {
   console.log('insights')
   forIn(config.adAcount, async (val: string) => {
@@ -67,9 +44,16 @@ export const insights = (params: Params) => {
   })
 }
 
+export const creatives = (params: Params) => {
+  console.log('creatives')
+  forIn(config.adAcount, async (val: string) => {
+    await fetchCreatives(config.facebookAccessToken, val, params.since)
+  })
+}
+
 // posts(params)
-insights(params)
-// creatives(params)
+// insights(params)
 // updateMarketingObjectives().then().catch(console.error)
-// updatePostFormats().then().catch(console.error)
+updateAdFormats().then().catch(console.error)
 // report()
+// creatives(params)

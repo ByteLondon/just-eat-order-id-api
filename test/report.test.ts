@@ -1,6 +1,6 @@
 import 'mocha'
 import { expect } from 'chai'
-import { linkClicks, postFormat } from '../src/report'
+import { linkClicks, postFormat, adFormat } from '../src/report'
 
 describe('LINK_CLICKS objective will map to:', () => {
   it('correct marketing objective', () => {
@@ -37,7 +37,7 @@ describe('LINK_CLICKS objective will map to:', () => {
 })
 
 describe('post `type` will map to:', () => {
-  it('relativant post format', () => {
+  it('relevant post format', () => {
     expect(
       postFormat(
         'https://www.just-eat.co.uk/',
@@ -85,12 +85,16 @@ describe('post `type` will map to:', () => {
   })
 })
 
-//TODO: test adFormat using the bellow
-//EXAMPLE AD_NAMEs:
-// DARK_Image Carousel Post_W1S
-//  DARK_Image Link Post_SE8_Indian
-//  Pizza Steam Video Carousel 2
-//  Hands DR 2
-//  DARK_Image Link Post_G13_Indian
-//  DARK_Image Link Post_Paisley_burger
-//  New Brand // Video Post Ad // Video Views // TVC
+describe('Correct ad_format name is genrated', () => {
+  it('based on ad_name', () => {
+    expect(adFormat('DARK_Image Carousel Post_W1S')).to.equal('image carousel')
+    expect(adFormat('DARK_Image Link Post_SE8_Indian')).to.equal('image link')
+    expect(adFormat('Pizza Steam Video Carousel 2')).to.equal('video carousel')
+    expect(adFormat('DARK_Image_Post_Paisley_burger link')).to.equal(
+      'image link'
+    )
+    expect(
+      adFormat('New Brand // Video Post Ad // Video Views // TVC')
+    ).to.equal('video')
+  })
+})

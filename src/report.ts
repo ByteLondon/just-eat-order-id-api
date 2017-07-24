@@ -122,7 +122,7 @@ const formats = [
 //   adName.includes('carousel') ? 'carousel' : 'single'
 
 export const adFormat = (adName: string) =>
-  formats.filter((a: string) => clean(adName).includes(a))
+  formats.filter((a: string) => clean(adName).includes(a)).join(' ')
 
 export const updateAdFormats = async () => {
   const ads = await selectAdNames()

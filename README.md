@@ -4,7 +4,8 @@
 ```yarn install
 yarn start
 createuser --pwprompt name  //(if you don't already have a user)
-createdb --encoding=UTF-8 --owner=name just-eat-order-id-api```
+createdb --encoding=UTF-8 --owner=name just-eat-order-id-api
+```
 
 ### DB migrations
 - To create the sql files that store the sql code for the up and down commands run: `./node_modules/.bin/db-migrate create create-<table-name>-table --sql-file`

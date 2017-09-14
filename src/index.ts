@@ -1,31 +1,59 @@
 import { logger } from './logger'
 import * as config from './config'
 import { fetchInsights } from './facebook/insights'
-import { fetchCreatives } from './facebook/posts'
+import { fetchPosts } from './facebook/posts'
+import { fetchCreatives, FetchCreatives } from './facebook/creatives'
+import * as Creatives from './model/facebook-creatives'
+import {
+  report,
+  updateMarketingObjectives,
+  updatePostFormats,
+  updateAdFormats
+} from './report'
+import * as async from 'async'
+import { forIn } from 'lodash'
 
 process.on('unhandledRejection', (err, promise) => {
   console.log('unhandled rejection', err, { promise })
-  // TODO: check why still getting unhandled rejection
-  // logger.error('unhandled rejection', err, { promise })
 })
 
-const since = '2017-06-29'
-const until = '2017-07-03'
+const params = {
+  since: '2016-10-01',
+  until: '2017-06-01'
+}
 
-const insights = async () =>
-  await fetchInsights(
-    config.facebookAccessToken,
-    config.adAcountId.jeEngagement,
-    since,
-    until
-  )
+interface Params {
+  since: string
+  until: string
+}
 
-const posts = async () =>
-  await fetchCreatives(
-    config.facebookAccessToken,
-    config.pageId.jeUk,
-    Math.floor(Date.parse(since) / 1000)
-  )
+const posts = async (params: Params) => {
+  console.log('posts')
+  await fetchPosts(config.facebookAccessToken, config.page.jeUk, params.since)
+}
 
-// insights()
-posts()
+export const insights = (params: Params) => {
+  console.log('insights')
+  forIn(config.adAcount, async (val: string) => {
+    await fetchInsights(
+      config.facebookAccessToken,
+      val,
+      params.since,
+      params.until
+    )
+  })
+}
+
+export const creatives = (params: Params) => {
+  console.log('creatives')
+  forIn(config.adAcount, async (val: string) => {
+    await fetchCreatives(config.facebookAccessToken, val, params.since)
+  })
+}
+
+// posts(params)
+// insights(params)
+// updateMarketingObjectives().then().catch(console.error)
+updateAdFormats().then().catch(console.error)
+// report()
+// creatives(params)

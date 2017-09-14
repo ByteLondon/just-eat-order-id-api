@@ -34,3 +34,5 @@ export const unpackFirstRow = (res: any[]) =>
 
 export const unpackValue = (name: string) => (res: any[]) =>
   new Promise((resolve, reject) => resolve(res[0][name]))
+
+export const connect = cb => pool.connect(cb)

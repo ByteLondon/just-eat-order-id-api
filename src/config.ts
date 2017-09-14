@@ -12,11 +12,11 @@ export const facebookAccessToken = env('FACEBOOK_ACCESS_TOKEN')
 
 export const databaseUrl = env('DATABASE_URL')
 
-export const pageId = {
+export const page = {
   jeUk: '340627227551'
 }
 
-export const adAcountId = {
+export const adAcount = {
   jeAppInstall: '1279122602099110',
   jeBrandStrategy: '1288521927825844',
   jeChatbot: '1343595992318437',

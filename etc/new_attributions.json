@@ -1,0 +1,10 @@
+{
+  "entries": [
+    {
+      "endpoint": "54.194.241.42",
+      "command": "cat /home/ubuntu/orderid/new_attributions.tsv",
+      "mandatory": true,
+      "username": "ubuntu"
+    }
+  ]
+}

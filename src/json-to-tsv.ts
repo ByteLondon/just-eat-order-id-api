@@ -3,7 +3,7 @@ import { createGunzip } from 'zlib'
 import { createInterface } from 'readline'
 import { stringify } from 'csv'
 
-const inpath = '/home/just-eat-dpa/writeable/uk_events_facebookorderattribution_filecompositefinal.json.gz'
+const inpath = '/home/just-eat-dpa/writeable/uk_events_facebookorderattribution_with_numeric_ids.json.gz'
 const encoding = 'utf-8'
 
 const toCSV = (columns: string[]) => stringify({ columns, delimiter: '\t', header: true })

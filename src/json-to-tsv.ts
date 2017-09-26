@@ -41,7 +41,8 @@ createInterface({
   input: createReadStream(inpath, { autoClose: true }).pipe(createGunzip())
 }).on('line', line => {
   const data = JSON.parse(line)
-  attributions.write(attributionColumns.map(col => data[col]))
+  // remove the trailing ' UTC' from timestamps
+  attributions.write(attributionColumns.map(col => data[col]).map(a => (a && a.endsWith(' UTC') ? a.slice(0, -4) : a)))
   for (const impression of data.attributions) {
     impressions.write([data.Id].concat(impressionColumns.map(col => impression[col])))
   }

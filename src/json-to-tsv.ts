@@ -8,21 +8,21 @@ const encoding = 'utf-8'
 
 const toCSV = (columns: string[]) => stringify({ columns, delimiter: '\t', header: true })
 
-const attributionColumns = [
+const attributions = toCSV([
   'conversion_device',
-  'RaisingComponent',
+  'raising_component',
   'order_id',
-  'TimeStamp',
+  'timestamp',
   'app_id',
   'order_timestamp',
   'attribution_type',
-  'Id',
-  'Tenant'
-]
-const attributions = toCSV(attributionColumns)
+  'id',
+  'tenant'
+])
 attributions.pipe(createWriteStream('new_attributions.tsv', { encoding }))
 
-const impressionColumns = [
+const impressions = toCSV([
+  'id',
   'impression_timestamp',
   'ad_id',
   'account_id',
@@ -33,17 +33,39 @@ const impressionColumns = [
   'action_type',
   'device',
   'placement'
-]
-const impressions = toCSV(['Id'].concat(impressionColumns))
+])
 impressions.pipe(createWriteStream('new_impressions.tsv', { encoding }))
 
 createInterface({
   input: createReadStream(inpath, { autoClose: true }).pipe(createGunzip())
 }).on('line', line => {
   const data = JSON.parse(line)
-  // remove the trailing ' UTC' from timestamps
-  attributions.write(attributionColumns.map(col => data[col]).map(a => (a && a.endsWith(' UTC') ? a.slice(0, -4) : a)))
+
+  attributions.write([
+    data.conversion_device,
+    data.RaisingComponent,
+    data.order_id,
+    data.TimeStamp && data.TimeStamp.slice(0, -4), // remove the trailing ' UTC' from timestamps
+    data.app_id,
+    data.order_timestamp && data.order_timestamp.slice(0, -4),
+    data.attribution_type,
+    data.Id,
+    data.Tenant
+  ])
+
   for (const impression of data.attributions) {
-    impressions.write([data.Id].concat(impressionColumns.map(col => impression[col])))
+    impressions.write([
+      data.Id,
+      impression.impression_timestamp,
+      impression.ad_id,
+      impression.account_id,
+      impression.impression_cost,
+      impression.adset_id,
+      impression.campaign_id,
+      impression.click_cost,
+      impression.action_type,
+      impression.device,
+      impression.placement
+    ])
   }
 })

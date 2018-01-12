@@ -44,7 +44,7 @@ createInterface({
   attributions.write([
     data.conversion_device,
     data.RaisingComponent,
-    data.order_id,
+    data.numeric_order_id,
     data.TimeStamp && data.TimeStamp.slice(0, -4), // remove the trailing ' UTC' from timestamps
     data.app_id,
     data.order_timestamp && data.order_timestamp.slice(0, -4),

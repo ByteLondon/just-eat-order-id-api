@@ -4,6 +4,7 @@
 .idea_modules
 .project
 .classpath
+.vscode
 *.iml
 *.paw
 

@@ -10,14 +10,14 @@ const toCSV = (columns: string[]) => stringify({ columns, delimiter: '\t', heade
 
 const attributions = toCSV([
   'conversion_device',
-  'raising_component',
+  // 'raising_component',
   'order_id',
   'timestamp',
   'app_id',
   'order_timestamp',
-  'attribution_type',
-  'id',
-  'tenant'
+  'attribution_type'
+  // 'id',
+  // 'tenant'
 ])
 attributions.pipe(createWriteStream('new_attributions.tsv', { encoding }))
 
@@ -43,23 +43,23 @@ createInterface({
 }).on('line', line => {
   const data = JSON.parse(line)
 
-  if (!seen.has(data.Id)) {
-    seen.add(data.Id)
+  if (!seen.has(data.numeric_order_id)) {
+    seen.add(data.numeric_order_id)
     attributions.write([
       data.conversion_device,
-      data.RaisingComponent,
+      // data.RaisingComponent,
       data.numeric_order_id,
       data.TimeStamp && data.TimeStamp.slice(0, -4), // remove the trailing ' UTC' from timestamps
       data.app_id,
       data.order_timestamp && data.order_timestamp.slice(0, -4),
-      data.attribution_type,
-      data.Id,
-      data.Tenant
+      data.attribution_type
+      // data.Id,
+      // data.Tenant
     ])
   }
 
   impressions.write([
-    data.Id,
+    data.numeric_order_id,
     data.impression_timestamp,
     data.ad_id,
     data.account_id,

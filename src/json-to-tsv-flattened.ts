@@ -13,7 +13,7 @@ const attributions = toCSV([
   // 'raising_component',
   'order_id',
   'timestamp',
-  'app_id',
+  // 'app_id',
   'order_timestamp',
   'attribution_type'
   // 'id',
@@ -42,7 +42,6 @@ createInterface({
   input: createReadStream(inpath, { autoClose: true }).pipe(createGunzip())
 }).on('line', line => {
   const data = JSON.parse(line)
-
   if (!seen.has(data.numeric_order_id)) {
     seen.add(data.numeric_order_id)
     attributions.write([
@@ -50,7 +49,7 @@ createInterface({
       // data.RaisingComponent,
       data.numeric_order_id,
       data.TimeStamp && data.TimeStamp.slice(0, -4), // remove the trailing ' UTC' from timestamps
-      data.app_id,
+      // data.app_id,
       data.order_timestamp && data.order_timestamp.slice(0, -4),
       data.attribution_type
       // data.Id,

@@ -2,13 +2,13 @@
   "entries": [
     {
       "endpoint": "54.194.241.42",
-      "command": "cat /home/just-eat-dpa/writeable/data-feed-for-byte-part-1.csv | node /home/ubuntu/orderid/lib/scrub-order-data.js",
+      "command": "gzip -dc /home/just-eat-dpa/writeable/data_feed_for_byte_web.csv.gz | node /home/ubuntu/orderid/lib/scrub-order-data.js",
       "mandatory": true,
       "username": "ubuntu"
     },
     {
       "endpoint": "54.194.241.42",
-      "command": "cat /home/just-eat-dpa/writeable/data-feed-for-byte-part-1.csv | node /home/ubuntu/orderid/lib/scrub-order-data.js",
+      "command": "gzip -dc /home/just-eat-dpa/writeable/data_feed_for_byte_apps_and_other.csv.gz | node /home/ubuntu/orderid/lib/scrub-order-data.js",
       "mandatory": true,
       "username": "ubuntu"
     }

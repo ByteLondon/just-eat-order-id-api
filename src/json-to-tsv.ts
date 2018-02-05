@@ -1,4 +1,4 @@
-import { createReadStream, createWriteStream } from 'fs'
+import { createReadStream, createWriteStream, readFileSync } from 'fs'
 import { createGunzip } from 'zlib'
 import { createInterface } from 'readline'
 import { stringify } from 'csv'
@@ -36,10 +36,13 @@ const impressions = toCSV([
 ])
 impressions.pipe(createWriteStream('new_impressions.tsv', { encoding }))
 
-createInterface({
-  input: createReadStream(inpath, { autoClose: true }).pipe(createGunzip())
-}).on('line', line => {
-  const data = JSON.parse(line)
+// createInterface({
+//   input: createReadStream(inpath, { autoClose: true }).pipe(createGunzip())
+// }).on('line', line => {
+//   const data = JSON.parse(line)
+
+const orders = JSON.parse(readFileSync(inpath, { encoding }))
+orders.forEach(data => {
 
   attributions.write([
     data.conversion_device,

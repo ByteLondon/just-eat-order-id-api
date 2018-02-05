@@ -1,0 +1,10 @@
+{
+  "entries": [
+    {
+      "endpoint": "54.194.241.42",
+      "command": "cat /home/ubuntu/setup.csv",
+      "mandatory": true,
+      "username": "ubuntu"
+    }
+  ]
+}

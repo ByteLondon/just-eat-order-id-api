@@ -2,12 +2,6 @@
   "entries": [
     {
       "endpoint": "54.194.241.42",
-      "command": "gzip -dc /home/just-eat-dpa/writeable/data_feed_for_byte_web.csv.gz | node /home/ubuntu/orderid/lib/scrub-order-data.js",
-      "mandatory": true,
-      "username": "ubuntu"
-    },
-    {
-      "endpoint": "54.194.241.42",
       "command": "gzip -dc /home/just-eat-dpa/writeable/data_feed_for_byte_apps_and_other.csv.gz | node /home/ubuntu/orderid/lib/scrub-order-data.js",
       "mandatory": true,
       "username": "ubuntu"
